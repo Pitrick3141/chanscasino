@@ -5,9 +5,17 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
+// @ts-ignore
 export default defineConfig({
   plugins: [
-      vue(),
+      vue({
+          template:{
+              compilerOptions:{
+                  // @ts-ignore
+                  isCustomElement: (tag) => tag.startsWith("amplify-"),
+              }
+          }
+      }),
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),
@@ -15,6 +23,14 @@ export default defineConfig({
         resolvers: [ElementPlusResolver()]
       }),
   ],
+    resolve: {
+        alias: [
+            {
+                find: './runtimeConfig',
+                replacement: './runtimeConfig.browser',
+            },
+        ]
+    },
   server:{
     host: "0.0.0.0",
     port: 3001,
