@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@element-plus/icons-vue': ^2.1.0
+  '@jridgewell/sourcemap-codec': ^1.4.15
   '@vitejs/plugin-vue': ^4.1.0
   '@vue/runtime-core': ^3.2.47
   amfe-flexible: ^2.2.1
@@ -11,6 +12,7 @@ specifiers:
   typescript: ^4.9.3
   unplugin-auto-import: ^0.15.3
   unplugin-vue-components: ^0.24.1
+  uuid: ^9.0.0
   vite: ^4.2.0
   vue: ^3.2.47
   vue-router: '4'
@@ -19,10 +21,12 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': 2.1.0_vue@3.2.47
+  '@jridgewell/sourcemap-codec': 1.4.15
   '@vue/runtime-core': 3.2.47
   amfe-flexible: 2.2.1
   element-plus: 2.3.3_vue@3.2.47
   sass: 1.62.0
+  uuid: 9.0.0
   vue: 3.2.47
   vue-router: 4.1.6_vue@3.2.47
   vue3-seamless-scroll: 2.0.1
@@ -288,7 +292,6 @@ packages:
 
   /@jridgewell/sourcemap-codec/1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
-    dev: true
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1042,6 +1045,11 @@ packages:
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.5.0
     dev: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /vite/4.2.1_sass@1.62.0:
     resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
