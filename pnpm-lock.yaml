@@ -15,6 +15,7 @@ specifiers:
   uuid: ^9.0.0
   vite: ^4.2.0
   vue: ^3.2.47
+  vue-cli-plugin-tailwind: ^3.0.0
   vue-router: '4'
   vue-tsc: ^1.2.0
   vue3-seamless-scroll: ^2.0.1
@@ -38,6 +39,7 @@ devDependencies:
   unplugin-auto-import: 0.15.3
   unplugin-vue-components: 0.24.1_vue@3.2.47
   vite: 4.2.1_sass@1.62.0
+  vue-cli-plugin-tailwind: 3.0.0
   vue-tsc: 1.2.0_typescript@4.9.5
 
 packages:
@@ -1083,6 +1085,10 @@ packages:
       sass: 1.62.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vue-cli-plugin-tailwind/3.0.0:
+    resolution: {integrity: sha512-bUWjfwGtJCeBU7pL4lD86RC+HsJAmAlYqr8e65NGC3q/ZBzC9KQs1Iy/vTyfDTnB7ZJm3huB+1a/m+17fdMZ8A==}
     dev: true
 
   /vue-demi/0.14.0_vue@3.2.47:
