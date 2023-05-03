@@ -10,6 +10,11 @@
       "StackName": "amplify-chanscasino-dev-191117",
       "StackId": "arn:aws:cloudformation:us-east-1:368686460320:stack/amplify-chanscasino-dev-191117/a50e5ee0-e93e-11ed-bf97-0a5b4e48910f",
       "AmplifyAppId": "dbij8ozhqnn5t"
+    },
+    "categories": {
+      "auth": {
+        "chanscasino8a815814": {}
+      }
     }
   }
 }
