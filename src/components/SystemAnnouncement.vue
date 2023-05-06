@@ -1,31 +1,24 @@
 <template>
-    <vue3-seamless-scroll :list="scroll_contents" class="scroll" :hover="true" :isWatch="true" :step="0.2">
-        <div class="item" v-for="(text, index) in scroll_contents" :key="index">
+    <vue3-seamless-scroll :list="scroll_contents[language]" class="scroll" :hover="true" :isWatch="true" :step="0.2">
+        <div class="item" v-for="(text, index) in scroll_contents[language]" :key="index">
             <el-text class="mx-1" type="primary" size="large">{{ text }}</el-text>
         </div>
     </vue3-seamless-scroll>
 </template>
 
 <script>
-import {defineComponent, inject} from "@vue/runtime-core";
+import {computed, defineComponent} from "@vue/runtime-core";
 import {Vue3SeamlessScroll} from "vue3-seamless-scroll";
-import {ref} from "vue";
+import {useStore} from "vuex";
 export default defineComponent({
     components: {
         Vue3SeamlessScroll
     },
     setup() {
-        const translations = inject("translation");
-        const scroll_contents = ref(translations["announcements"][0]);
-
-        const SwitchLanguage = (lang) => {
-            scroll_contents.value = translations["announcements"][lang];
-        }
-
-        return { scroll_contents, SwitchLanguage};
-    },
-    props:{
-        lang: Number
+        const language = computed(() => useStore().state.appGlobal.language);
+        const translations = computed(() => useStore().state.appGlobal.translations);
+        const scroll_contents = translations.value["announcements"];
+        return { scroll_contents, language};
     }
 });
 </script>

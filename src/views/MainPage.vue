@@ -1,19 +1,20 @@
 <template>
     <div class="common-layout">
         <el-container>
-            <side-menu @show-instruction="ShowInstruction" @change-language="ChangeLanguage" :lang="language"/>
+            <side-menu @show-instruction="ShowInstruction" />
             <el-container>
                 <el-header height="auto">
+                    <navigation-bar/>
                     <el-image style="width: auto; height: auto" src="\img\title.png" fit="contain" />
                 </el-header>
                 <el-container>
                     <el-main>
-                        <tutorials :section="instructionIndex" :lang="language" @start-basic-game="StartBasicGame"/>
-                        <poker-picker :lang="language" v-if="showPokerPicker" ref="pokerPickerRef"/>
+                        <tutorials :section="instructionIndex" @start-basic-game="StartBasicGame"/>
+                        <poker-picker v-if="showPokerPicker" ref="pokerPickerRef"/>
                     </el-main>
                     <el-footer>
                         <el-divider />
-                        <scroll-announcement ref="announcementRef"/>
+                        <scroll-announcement />
                     </el-footer>
                 </el-container>
             </el-container>
@@ -27,28 +28,17 @@ import PokerPicker from "../components/PokerPicker.vue";
 import ScrollAnnouncement from "../components/SystemAnnouncement.vue";
 import SideMenu from "../components/SideMenu.vue";
 import { ref } from "vue";
-import {inject} from "@vue/runtime-core";
+import {useStore} from "vuex";
+import {computed} from "@vue/runtime-core";
 
 const instructionIndex = ref(0);
-const language = ref(0);
-const translations = inject("translation") as Record<string, Array<string>>;
+const language = computed(() => useStore().state.appGlobal.language);
 const showPokerPicker = ref(true);
-const announcementRef = ref();
 const pokerPickerRef = ref();
 
 const ShowInstruction = (selectedIndex: string) => {
     console.log("Child Emitted Show Ins#: " + selectedIndex);
     instructionIndex.value = parseInt(selectedIndex);
-};
-
-const ChangeLanguage = (selectedIndex: string) => {
-    console.log("Child Emitted Change Lang#: " + selectedIndex);
-    language.value = parseInt(selectedIndex) - 1;
-    ElMessage({
-        message: translations["change_language_message"][language.value],
-        type: 'success',
-    });
-    announcementRef.value.SwitchLanguage(language.value);
 };
 
 const StartBasicGame = () =>{

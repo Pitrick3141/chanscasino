@@ -1,4 +1,6 @@
 import { createStore } from 'vuex'
+import {auth} from "./auth/auth.js";
+import appGlobal from "./modules/appGlobal.js";
 
 export default createStore({
   state: {
@@ -10,5 +12,7 @@ export default createStore({
   actions: {
   },
   modules: {
+    auth,
+    appGlobal
   }
 })

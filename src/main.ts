@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp, ref} from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from "./router";
@@ -9,7 +9,7 @@ import AmplifyVue from '@aws-amplify/ui-vue';
 
 // @ts-ignore
 import aws_exports from "./aws-exports";
-
+// @ts-ignore
 import store from './store'
 
 Amplify.configure(aws_exports);
@@ -73,10 +73,15 @@ const globalTranslationDictionary = {
             "这究竟是谁的ISP?",
             "更有牛马小榜单等你占领！",]
     ],
-    "under_construction": ["Too bad that this part is still under construction!", "前面的区域，以后再来探索吧？"]
+    "under_construction": ["Too bad that this part is still under construction!", "前面的区域，以后再来探索吧？"],
+    "nav_bar_welcome": ["Welcome", "欢迎"],
+    "nav_bar_login": ["Login", "登录"],
+    "nav_bar_signup": ["Signup", "注册"],
+    "nav_bar_logout": ["Logout", "登出"],
 }
 
 app.provide("translation", globalTranslationDictionary);
-app.config.globalProperties.$translation = globalTranslationDictionary;
+app.config.globalProperties.translation = globalTranslationDictionary;
+app.config.globalProperties.language = ref(0);
 app.use(AmplifyVue);
 app.use(router).mount('#app');

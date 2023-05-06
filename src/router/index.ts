@@ -8,6 +8,8 @@ const router = createRouter({
             meta:{title: '老陈大赌场开业啦'},
             component: () => import("../views/MainPage.vue")},
         {name: "test", path: "/test", component: () => import("../views/TestPage.vue")},
+        {name: "login", path: "/login", component: () => import("../views/LoginPage.vue")},
+        {name: "signup", path: "/signup", component: () => import("../views/SignUpPage.vue")},
         {name: "poker-picker", path: "/poker-picker", component: () => import("../components/PokerPicker.vue")},
     ]
 })
