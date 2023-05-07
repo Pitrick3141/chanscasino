@@ -69,20 +69,61 @@ export default {
                 "auth_signup": ["Sign Up", "注册"],
                 "auth_confirm_signup": ["Confirm Sign Up", "确认注册"],
                 "auth_confirm_message": ["Please check your email and enter your confirm code", "请检查你的注册邮箱并输入验证码"],
+                "signup_success_message": ["Signup successfully, now please confirm your email address", "注册成功，请验证您的邮箱地址"],
+                "confirm_signup_success_message": ["Email address confirmed successfully", "邮箱地址验证成功"],
+                "login_success_message": ["Welcome back", "欢迎回来"],
+                "logout_success_message": ["Goodbye", "再见"],
+                "play_as_tourist": ["Currently playing as tourist", "当前正在以游客身份游玩"],
+                "win_prize_message": ["You have won", "你赢得了"],
+                "chanidian_dollar": ["Chanidian Dollar", "陈元"],
+                "not_enough_balance": ["Your balance is not enough to start another game", "您的余额不足，无法开启新的游戏"],
             },
             language: 0,
+            currentBalance: 100,
+            highestBalance: 100,
+            gameRecords: [],
         }
     },
     mutations: {
         changeGlobalLanguage(state, lang){
             state.language = lang;
         },
+        changeCurrentBalance(state, val){
+            state.currentBalance = val;
+            if(state.currentBalance > state.highestBalance){
+                state.highestBalance = state.currentBalance;
+            }
+        },
+        spendBalance(state, val){
+            state.currentBalance -= val;
+        },
+        earnBalance(state, val){
+            state.currentBalance += val;
+            if(state.currentBalance > state.highestBalance){
+                state.highestBalance = state.currentBalance;
+            }
+        },
+        recordGame(state, result){
+            result['currentBalance'] = state.currentBalance;
+            state.gameRecords.push(result);
+            console.log(state.gameRecords);
+        }
+
     },
     actions: {
         updateGlobalLanguage(context, lang) {
             context.commit("changeGlobalLanguage", lang);
             console.log("language changed: " + lang.toString());
         },
+        playGame(context, cost){
+            context.commit("spendBalance", cost);
+        },
+        winGame(context, prize){
+            context.commit("earnBalance", prize);
+        },
+        recordGame(context, result) {
+            context.commit("recordGame", result);
+        }
     },
     getters: {
         language(state) {
@@ -90,6 +131,12 @@ export default {
         },
         translation(state) {
             return state.translations;
+        },
+        currentBalance(state){
+            return state.currentBalance;
+        },
+        highestBalance(state){
+            return state.highestBalance;
         }
     }
 }

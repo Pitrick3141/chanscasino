@@ -2,6 +2,9 @@
     <div>
         <ul class="flex justify-end">
             <li class="mr-6" v-if="!user">
+                <div class="font-semibold text-black-500">{{ translations['play_as_tourist'][language] }}</div>
+            </li>
+            <li class="mr-6" v-if="!user">
                 <router-link to="/login">
                     <a class="text-blue-500 hover:text-blue-800 cursor-pointer">{{ translations['nav_bar_login'][language] }}</a>
                 </router-link>
@@ -29,7 +32,12 @@ export default {
     name: "NavigationBar",
     methods: {
         async logout(){
+            const username = this.user.username;
             await this.$store.dispatch("auth/logout");
+            ElMessage({
+                message: this.translations["logout_success_message"][this.language] + ", " + username + "!",
+                type: 'success',
+            });
             this.$router.push("/");
         },
     },
@@ -37,9 +45,6 @@ export default {
         ...mapGetters({
             user: "auth/user",
         }),
-    },
-    props:{
-        lang: Number,
     },
     setup() {
         const translations = computed(() => useStore().state.appGlobal.translations);

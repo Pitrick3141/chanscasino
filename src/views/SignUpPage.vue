@@ -1,5 +1,6 @@
 <template>
     <div>
+        <el-alert v-if="this.error!==''" :title="this.error" type="error" />
         <form v-if="!confirmPassword" class="flex flex-col items-center" @submit.prevent="signUp">
             <div class="flex flex-col user">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="userName">{{ translations['auth_username'][language] }}</label>
@@ -62,6 +63,7 @@ export default {
     }),
     methods:{
         async signUp(){
+            this.error = '';
             if(!this.username || !this.password){
                 return;
             }
@@ -71,7 +73,10 @@ export default {
                     password: this.password,
                     email: this.email
                 });
-
+                ElMessage({
+                    message: this.translations["signup_success_message"][this.language],
+                    type: 'success',
+                });
                 this.confirmPassword = true;
             }
             catch(error){
@@ -80,6 +85,7 @@ export default {
         },
 
         async confirmSignUp(){
+            this.error = '';
             if(!this.username || !this.code){
                 return;
             }
@@ -92,7 +98,11 @@ export default {
                     username: this.username,
                     password: this.password,
                 });
-                this.$router.push("/test");
+                ElMessage({
+                    message: this.translations["confirm_signup_success_message"][this.language],
+                    type: 'success',
+                });
+                this.$router.push("/");
 
             }
             catch (error){

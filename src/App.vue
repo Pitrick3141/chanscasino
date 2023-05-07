@@ -1,4 +1,14 @@
-<script setup lang="ts">
+<script>
+import {mapActions} from "vuex";
+
+export default {
+    mounted() {
+        this.authAction();
+    },
+    methods: {
+        ...mapActions("auth", ["authAction"]),
+    }
+}
 </script>
 
 <template>
