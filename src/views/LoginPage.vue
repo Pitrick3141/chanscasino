@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-alert v-if="this.error!==''" :title="this.error" type="error" />
-        <form class="flex flex-col items-center" @submit.prevent="login">
+        <el-alert v-if="this.error_message!==''" :title="this.error_message" type="error" />
+        <form v-if="!confirmPassword" class="flex flex-col items-center" @submit.prevent="login">
             <div class="flex flex-col user">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="userName">{{ translations['auth_username'][language] }}</label>
                 <input
@@ -22,6 +22,18 @@
             <!-- eslint-disable -->
             <button class="btn-blue">{{ translations['auth_login'][language] }}</button>
         </form>
+        <div v-if="confirmPassword" class="w-4/12 m-auto">
+            <h3>{{ translations['auth_confirm_message'][language] }}</h3>
+            <div class="flex flex-col mt-2">
+                <label class="block text-gray-700 text-sm font-bold" for="password">{{ translations['auth_code'][language] }}</label>
+                <input
+                    class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text"
+                    v-model="code"
+                />
+                <button class="btn-blue" @click="confirmSignUp">{{ translations['auth_confirm_signup'][language] }}</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,7 +47,10 @@ export default {
         username: "",
         password: "",
         email: "",
-        error: ""
+        error: "",
+        error_message: "",
+        code: "",
+        confirmPassword: false,
     }),
     setup(){
         const language = computed(() => useStore().state.appGlobal.language);
@@ -49,7 +64,15 @@ export default {
             loginVue: "auth/login"
         }),
         async login(){
-            this.error = '';
+            this.error_message = '';
+            if(!this.username){
+                this.error_message = this.translations['error_messages']['enter_username'][this.language];
+                return;
+            }
+            if(!this.password){
+                this.error_message = this.translations['error_messages']['enter_password'][this.language];
+                return;
+            }
             try{
                 await this.loginVue({
                     username: this.username,
@@ -63,6 +86,40 @@ export default {
             }
             catch (error) {
                 this.error = error;
+                console.log(error.message);
+                this.error_message = this.translations['error_messages'][error.message][this.language];
+                if(error.message === "User is not confirmed."){
+                    this.confirmPassword = true;
+                }
+            }
+        },
+
+        async confirmSignUp(){
+            this.error_message = '';
+            if(!this.code){
+                this.error_message = this.translations['error_messages']['enter_code'][this.language];
+                return;
+            }
+            try{
+                await this.$store.dispatch("auth/confirmSIgnUp", {
+                    username: this.username,
+                    code: this.code,
+                });
+                await this.$store.dispatch("auth/login",{
+                    username: this.username,
+                    password: this.password,
+                });
+                ElMessage({
+                    message: this.translations["confirm_signup_success_message"][this.language],
+                    type: 'success',
+                });
+                this.$router.push("/");
+
+            }
+            catch (error){
+                this.error = error;
+                console.log(error.message);
+                this.error_message = this.translations['error_messages'][error.message][this.language];
             }
         }
     },

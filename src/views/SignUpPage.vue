@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-alert v-if="this.error!==''" :title="this.error" type="error" />
+        <el-alert v-if="this.error_message!==''" :title="this.error_message" type="error" />
         <form v-if="!confirmPassword" class="flex flex-col items-center" @submit.prevent="signUp">
             <div class="flex flex-col user">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="userName">{{ translations['auth_username'][language] }}</label>
@@ -31,7 +31,6 @@
             </div>
             <button class="btn-blue">{{ translations['auth_signup'][language] }}</button>
         </form>
-        <div v-if="error" class="text-red-600">{{ error.message }}</div>
         <div v-if="confirmPassword" class="w-4/12 m-auto">
             <h3>{{ translations['auth_confirm_message'][language] }}</h3>
             <div class="flex flex-col mt-2">
@@ -58,13 +57,23 @@ export default {
         password: '',
         email: '',
         error: '',
+        error_message: '',
         confirmPassword: '',
         code: '',
     }),
     methods:{
         async signUp(){
-            this.error = '';
-            if(!this.username || !this.password){
+            this.error_message = '';
+            if(!this.username){
+                this.error_message = this.translations['error_messages']['enter_username'][this.language];
+                return;
+            }
+            if(!this.password){
+                this.error_message = this.translations['error_messages']['enter_password'][this.language];
+                return;
+            }
+            if(!this.email){
+                this.error_message = this.translations['error_messages']['enter_email'][this.language];
                 return;
             }
             try{
@@ -81,12 +90,15 @@ export default {
             }
             catch(error){
                 this.error = error;
+                console.log(error.message);
+                this.error_message = this.translations['error_messages'][error.message][this.language];
             }
         },
 
         async confirmSignUp(){
-            this.error = '';
-            if(!this.username || !this.code){
+            this.error_message = '';
+            if(!this.code){
+                this.error_message = this.translations['error_messages']['enter_code'][this.language];
                 return;
             }
             try{
@@ -106,8 +118,9 @@ export default {
 
             }
             catch (error){
-                console.log(error);
                 this.error = error;
+                console.log(error.message);
+                this.error_message = this.translations['error_messages'][error.message][this.language];
             }
         }
     },

@@ -36,6 +36,7 @@ declare module '@vue/runtime-core' {
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
     SystemAnnouncement: typeof import('./src/components/SystemAnnouncement.vue')['default']
     Tutorials: typeof import('./src/components/Tutorials.vue')['default']
+    UserInfo: typeof import('./src/components/UserInfo.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

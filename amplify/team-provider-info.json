@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "chanscasino8a815814": {}
+      },
+      "api": {
+        "chanscasino": {}
+      },
+      "storage": {
+        "GameRecords": {}
       }
     }
   }

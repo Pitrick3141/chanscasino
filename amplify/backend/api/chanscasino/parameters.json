@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "chanscasino",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authchanscasino8a815814",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2023-05-07T15:39:44.703Z"
+}

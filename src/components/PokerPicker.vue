@@ -2,7 +2,7 @@
     <div class="container flex-col">
         <el-text class="">
             <el-icon><money /></el-icon>
-            Your Current Balance: {{currentBalanceDisplay}}
+            {{translations["current_balance"][language] + currentBalanceDisplay}}
         </el-text>
         <el-text :type="balanceChangeType" tag="b">
             {{ balanceChangeDisplay }}
@@ -10,7 +10,7 @@
         <br>
         <el-text class="">
             <el-icon><trophy /></el-icon>
-            Your Highest Balance in History: {{highestBalanceDisplay}}
+            {{translations["highest_balance"][language] + highestBalanceDisplay}}
         </el-text>
         <div class="poker-picker">
             <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="!isSelected" :loading="isLoading" @click="generateRandomAnswer" v-if="isStarted">{{ translations["poker_picker_restart_button"][language]}}</el-button>
@@ -39,8 +39,8 @@ import {Money, Trophy} from "@element-plus/icons-vue";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
-const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.currentBalance).value);
-const highestBalanceDisplay = ref(computed(() => useStore().state.appGlobal.highestBalance).value);
+const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.currentBalance);
+const highestBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.highestBalance);
 const balanceChangeDisplay = ref("");
 const balanceChangeType = ref("success");
 const values = ['A','2','3','4','5','6','7','8','9','10','11','12','13'];
@@ -150,26 +150,11 @@ const onMouseLeave = (event: any) => {
 };
 
 const updateBalanceDisplay = () =>{
-    currentBalanceDisplay.value = computed(() => store.state.appGlobal.currentBalance).value;
-    highestBalanceDisplay.value = computed(() => store.state.appGlobal.highestBalance).value;
+    currentBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.currentBalance;
+    highestBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.highestBalance;
 }
 
 const winPrize = (prize: Number, explain: String) => {
-    const currentTime = new Date(Date.parse(new Date().toString()));
-    const gameRecord = {
-        currentTime: currentTime,
-        gamePlayer: computed(() => store.state.auth.user).value,
-        gameResult: explain,
-        randomPoker: correctType.value + " " + correctValue.value,
-        selectedPoker: selectedType.value + " " + selectedValue.value,
-        gamePrize: prize
-    };
-    console.log(gameRecord);
-    store.dispatch("appGlobal/recordGame", gameRecord)
-    if(prize == 0){
-        balanceChangeDisplay.value = "";
-        return;
-    }
     store.dispatch("appGlobal/winGame", prize);
     balanceChangeType.value = "success";
     balanceChangeDisplay.value = "+" + prize.toString() + " " + explain;
@@ -178,6 +163,20 @@ const winPrize = (prize: Number, explain: String) => {
         type: 'success',
     });
     updateBalanceDisplay();
+    const gameRecord = {
+        username: computed(() => store.state.auth.user).value.username,
+        gameResult: explain,
+        randomPoker: correctType.value + " " + correctValue.value,
+        selectedPoker: selectedType.value + " " + selectedValue.value,
+        gamePrize: prize,
+        balance: currentBalanceDisplay.value,
+    };
+    console.log(gameRecord);
+    store.dispatch("appGlobal/createGameRecord", gameRecord);
+    store.dispatch("appGlobal/recordGame", gameRecord);
+    if(prize == 0){
+        balanceChangeDisplay.value = "";
+    }
 }
 
 defineExpose({isSelected, generateRandomAnswer});

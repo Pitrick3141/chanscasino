@@ -66,7 +66,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
                 type: 'info',
             });
         }
-        emit("showInstruction", key[2])
+        emit("showInstruction", key[2]);
     }
     else if(key[0] == '2')
     {
@@ -74,6 +74,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
             message: translations.value["under_construction"][language.value],
             type: 'info',
         });
+        emit("showUserInfo");
     }
     else if(key[0] == '3')
     {
@@ -98,7 +99,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
     }
 }
 
-const emit = defineEmits(["showInstruction", "changeLanguage"]);
+const emit = defineEmits(["showInstruction", "changeLanguage", "showUserInfo"]);
 </script>
 
 <style scoped>

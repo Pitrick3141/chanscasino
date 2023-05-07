@@ -1,3 +1,9 @@
+import {API, graphqlOperation} from "aws-amplify";
+import {createUserInfo as createUserInfoMutation} from "../../graphql/mutations.js";
+import {getUserInfo as getUserInfoQuery} from "../../graphql/queries.js";
+import {updateUserInfo as updateUserInfoMutation} from "../../graphql/mutations.js";
+import {createGameRecord as createGameRecordMutation} from "../../graphql/mutations.js";
+
 export default {
     namespaced: true,
     state() {
@@ -9,7 +15,7 @@ export default {
                 "side_menu_1_group_1_item_2": ["Extra Game", "进阶模式"],
                 "side_menu_1_group_2": ["Others", "其他教程"],
                 "side_menu_1_group_2_item_1": ["How to View Statistics", "如何查看统计数据"],
-                "side_menu_2": ["Settings", "设置"],
+                "side_menu_2": ["User Info", "用户信息"],
                 "side_menu_3": ["Statics", "统计数据"],
                 "side_menu_4": ["About", "关于"],
                 "side_menu_5": ["Language/语言", "语言/Language"],
@@ -77,11 +83,31 @@ export default {
                 "win_prize_message": ["You have won", "你赢得了"],
                 "chanidian_dollar": ["Chanidian Dollar", "陈元"],
                 "not_enough_balance": ["Your balance is not enough to start another game", "您的余额不足，无法开启新的游戏"],
+                "error_messages": {
+                    "User does not exist.": ["The username you entered does not exist", "你输入的用户名不存在"],
+                    "Incorrect username or password.": ["The username and password you entered do not match", "您输入的用户名和密码不匹配"],
+                    "enter_password": ["Please enter your password", "请输入密码"],
+                    "enter_username": ["Please enter your username", "请输入用户名"],
+                    "enter_email": ["Please enter your email", "请输入电子邮件"],
+                    "enter_code": ["Please enter your confirmation code", "请输入验证码"],
+                    "Password did not conform with policy: Password not long enough": ["Your password has to be more than 8 digits", "您的密码长度必须大于或等于8位"],
+                    "User already exists": ["You have already signed up, please log in", "您已经注册过了，请您登录"],
+                    "User is not confirmed.": ["You have not confirmed your email yet", "您还没有验证您的电子邮件"],
+                },
+                "user_info_username": ["Current User: ", "当前登录的用户: "],
+                "user_info_not_exist": ["Your Info does not exist in database", "您的信息在数据库中不存在"],
+                "current_balance": ["Your Current Balance: ", "您当前的余额: "],
+                "highest_balance": ["Your History Highest Balance: ", "您的历史最高余额: "],
+                "game_played": ["Total Game Played: ", "总计进行的游戏场数: :"],
+
             },
             language: 0,
-            currentBalance: 100,
-            highestBalance: 100,
-            gameRecords: [],
+            userInfo: {
+                currentBalance: 100,
+                highestBalance: 100,
+                gamePlayed: 10,
+                gameRecords: [],
+            }
         }
     },
     mutations: {
@@ -89,26 +115,27 @@ export default {
             state.language = lang;
         },
         changeCurrentBalance(state, val){
-            state.currentBalance = val;
-            if(state.currentBalance > state.highestBalance){
-                state.highestBalance = state.currentBalance;
+            state.userInfo.currentBalance = val;
+            if(state.userInfo.currentBalance > state.userInfo.highestBalance){
+                state.userInfo.highestBalance = state.userInfo.currentBalance;
             }
         },
         spendBalance(state, val){
-            state.currentBalance -= val;
+            state.userInfo.currentBalance -= val;
         },
         earnBalance(state, val){
-            state.currentBalance += val;
-            if(state.currentBalance > state.highestBalance){
-                state.highestBalance = state.currentBalance;
+            state.userInfo.currentBalance += val;
+            if(state.userInfo.currentBalance > state.userInfo.highestBalance){
+                state.userInfo.highestBalance = state.userInfo.currentBalance;
             }
         },
         recordGame(state, result){
-            result['currentBalance'] = state.currentBalance;
-            state.gameRecords.push(result);
-            console.log(state.gameRecords);
+            state.userInfo.gameRecords.push(result);
+            console.log(state.userInfo.gameRecords);
+        },
+        setUserInfo(state, payload){
+            state.userInfo = payload;
         }
-
     },
     actions: {
         updateGlobalLanguage(context, lang) {
@@ -123,7 +150,42 @@ export default {
         },
         recordGame(context, result) {
             context.commit("recordGame", result);
-        }
+        },
+        async createUserInfo(_, newUserInfo){
+            try{
+                await API.graphql(graphqlOperation(createUserInfoMutation, {input: newUserInfo}));
+            }
+            catch(error){
+                console.log("createUserInfo", error);
+            }
+
+        },
+        async getUserInfo({commit}, userId){
+            return API.graphql(graphqlOperation(getUserInfoQuery, {id: userId}));
+        },
+        async setUserInfo({commit}, info){
+            console.log(info);
+            commit("setUserInfo", info);
+        },
+        async updateUserInfo(_, userInfo){
+            try{
+                await API.graphql(graphqlOperation(updateUserInfoMutation, {input: userInfo}));
+            }
+            catch(error){
+                console.log("updateUserInfo", error);
+            }
+
+        },
+        async createGameRecord(_, newGameRecord){
+            try{
+                const record = await API.graphql(graphqlOperation(createGameRecordMutation, {input: newGameRecord}));
+                console.log(record);
+            }
+            catch(error){
+                console.log("createGameRecord", error);
+            }
+
+        },
     },
     getters: {
         language(state) {
@@ -132,11 +194,8 @@ export default {
         translation(state) {
             return state.translations;
         },
-        currentBalance(state){
-            return state.currentBalance;
-        },
-        highestBalance(state){
-            return state.highestBalance;
+        userInfo(state){
+            return state.userInfo;
         }
     }
 }
