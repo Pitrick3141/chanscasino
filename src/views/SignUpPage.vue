@@ -127,7 +127,7 @@ export default {
                     differentCnt: userInfo.differentCnt,
                     gameRecords: userInfo.gameRecords,
                     isEntryPaid: userInfo.isEntryPaid,
-                    language: this.language,
+                    language: this.language.value,
                 };
                 await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
                 this.$router.push("/");
