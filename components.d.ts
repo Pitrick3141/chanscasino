@@ -33,7 +33,6 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
     GameRecords: typeof import('./src/components/GameRecords.vue')['default']
     NavigationBar: typeof import('./src/components/NavigationBar.vue')['default']
@@ -44,10 +43,8 @@ declare module '@vue/runtime-core' {
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
     SystemAnnouncement: typeof import('./src/components/SystemAnnouncement.vue')['default']
     Tutorials: typeof import('./src/components/Tutorials.vue')['default']
-    UserInfo: typeof import('./src/components/UserInfo.vue')['default']
   }
   export interface ComponentCustomProperties {
-    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

@@ -6,7 +6,7 @@
             <el-icon><money /></el-icon>
             {{translations["current_balance"][language] + currentBalanceDisplay}}
         </el-text>
-        <el-text :type="// noinspection TypeScriptValidateTypes balanceChangeType" tag="b">
+        <el-text :type="balanceChangeType" tag="b">
             {{ balanceChangeDisplay }}
         </el-text>
         <br>
@@ -17,7 +17,7 @@
         <div class="poker-picker">
             <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="isEntryPaid" :loading="isLoading" @click="generateRandomAnswer">{{ translations["poker_picker_restart_button"][language]}}</el-button>
             <el-alert v-if="isSelected" :title="alertTitleAns" type="info" style="margin: 10px" />
-            <el-alert v-if="isSelected" :title="alertTitle" :type="// noinspection TypeScriptValidateTypes alertType" style="margin: 10px" />
+            <el-alert v-if="isSelected" :title="alertTitle" :type="alertType" style="margin: 10px" />
             <div v-loading="isSelected||!isEntryPaid" :element-loading-text="translations['poker_picker_loading_info'][language]">
                 <el-row v-for="typeIndex in [0,1,2,3]" justify="space-evenly" class="poker-row">
                     <el-space>
