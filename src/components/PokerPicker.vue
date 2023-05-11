@@ -1,6 +1,6 @@
 <!--suppress TypeScriptValidateTypes -->
 <template>
-    <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
+    <el-alert v-if="user==null&&isSelected" :title="translations['info_not_login_record'][language]" type="error" />
     <div class="container flex-col">
         <el-text class="">
             <el-icon><money /></el-icon>

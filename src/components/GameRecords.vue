@@ -11,7 +11,7 @@
         <el-descriptions-item :label="translations['info_id'][language]">{{ user.id }}</el-descriptions-item>
 
     </el-descriptions>
-    <div class="flex flex-row">
+    <div v-if="user!=null" class="flex flex-row">
         <el-text>{{ translations["info_danger_operation"][language] }}</el-text>
         <el-switch
             class="ml-2"
