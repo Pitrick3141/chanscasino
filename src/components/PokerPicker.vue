@@ -208,15 +208,15 @@ const padTo2Digits = (num: Number) => {
 };
 
 const updateUserInfo = () => {
-    user.value = computed(() => store.state.auth.user).value
+    user.value = computed(() => store.state.auth.user).value;
     const userInfo = computed(() => store.state.appGlobal.userInfo).value;
     if(user.value == null){
         console.log("[ERROR] Not Logged in, skipping update");
         return;
     }
     const info = {
-        id: user.username,
-        username: user.username,
+        id: user.value.username,
+        username: user.value.username,
         balance: userInfo.balance,
         highestBalance: userInfo.highestBalance,
         gamePlayed: userInfo.gamePlayed,
