@@ -207,7 +207,7 @@ const padTo2Digits = (num: Number) => {
     return num.toString().padStart(2, '0');
 };
 
-const updateUserInfo = () => {
+const updateUserInfo = async() => {
     user.value = computed(() => store.state.auth.user).value
     const userInfo = computed(() => store.state.appGlobal.userInfo).value;
     if(user.value == null){
@@ -226,10 +226,10 @@ const updateUserInfo = () => {
         differentCnt: userInfo.differentCnt,
         gameRecords: userInfo.gameRecords,
         isEntryPaid: userInfo.isEntryPaid,
-        language: language,
+        language: language.value,
     };
     try{
-        store.dispatch("appGlobal/updateUserInfo", info);
+        await store.dispatch("appGlobal/updateUserInfo", info);
     }
     catch (error){
         console.log(error);
