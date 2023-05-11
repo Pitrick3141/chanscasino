@@ -21,7 +21,15 @@
           </div>
           <el-divider></el-divider>
           <div slot="body" class="text item">
-              {{ translations['tutorials_extra_game_content'][language] }}
+              {{ translations['tutorials_extra_game_content_1'][language] }}
+              <br>
+              {{ translations['tutorials_extra_game_content_2'][language] }}
+              <br>
+              {{ translations['tutorials_extra_game_content_3'][language] }}
+              <br>
+              {{ translations['tutorials_extra_game_content_4'][language] }}
+              <br>
+              {{ translations['tutorials_extra_game_content_5'][language] }}
           </div>
       </el-card>
       <el-card class="box-card" v-if="props.section==3" shadow="hover">
@@ -59,10 +67,7 @@ const StartBasicGameLink = () =>{
 }
 
 const StartExtraGameLink = () =>{
-    ElMessage({
-        message: translations.value["under_construction"][language.value],
-        type: 'info',
-    });
+    emit("startBasicGame");
 }
 
 const ViewStatisticsLink = () =>{

@@ -1,6 +1,9 @@
 ## [Start] Authorization Steps. **
 $util.qr($ctx.stash.put("hasAuth", true))
 #set( $isAuthorized = false )
+#if( $util.authType() == "API Key Authorization" )
+  #set( $isAuthorized = true )
+#end
 #if( $util.authType() == "IAM Authorization" )
   #set( $adminRoles = ["us-east-1_ih0DQ1MEe_Full-access/CognitoIdentityCredentials","us-east-1_ih0DQ1MEe_Manage-only/CognitoIdentityCredentials"] )
   #foreach( $adminRole in $adminRoles )

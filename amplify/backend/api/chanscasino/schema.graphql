@@ -1,32 +1,15 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-type UserInfo @model @auth(rules: [
-  {allow: owner},
-  {allow: public, operations: [read]}
-])
-{
+type UserInfo @model @auth(rules: [{allow: owner}, {allow: public, operations: [read], provider: apiKey}]) {
   id: ID!
   username: String!
   createdAt: String!
   updatedAt: String!
   gamePlayed: Int!
+  samePokerCnt: Int!
+  sameValueCnt: Int!
+  sameColorCnt: Int!
+  differentCnt: Int!
   balance: Int!
   highestBalance: Int!
-  gameRecords: [GameRecord] @hasMany(indexName:"byRecord", fields: ["id"])
-}
-
-type GameRecord @auth(rules: [
-  {allow: owner},
-  {allow: public, operations: [read]}
-])
-@model
-{
-  id: ID!
-  username: ID! @index(name:"byRecord", sortKeyFields: ["createdAt"])
-  createdAt: String!
-  randomPoker: String!
-  selectedPoker: String!
-  gameResult: String!
-  gamePrize: Int!
-  balance: Int!
+  gameRecords: AWSJSON!
+  isEntryPaid: Boolean!
 }

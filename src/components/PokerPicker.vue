@@ -13,10 +13,10 @@
             {{translations["highest_balance"][language] + highestBalanceDisplay}}
         </el-text>
         <div class="poker-picker">
-            <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="!isSelected" :loading="isLoading" @click="generateRandomAnswer" v-if="isStarted">{{ translations["poker_picker_restart_button"][language]}}</el-button>
-            <el-alert v-if="isSelected&&isStarted" :title="alertTitleAns" type="info" style="margin: 10px" />
-            <el-alert v-if="isSelected&&isStarted" :title="alertTitle" :type="alertType" style="margin: 10px" />
-            <div v-loading="isSelected&&isStarted" :element-loading-text="translations['poker_picker_loading_info'][language]">
+            <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="isEntryPaid" :loading="isLoading" @click="generateRandomAnswer">{{ translations["poker_picker_restart_button"][language]}}</el-button>
+            <el-alert v-if="isSelected" :title="alertTitleAns" type="info" style="margin: 10px" />
+            <el-alert v-if="isSelected" :title="alertTitle" :type="alertType" style="margin: 10px" />
+            <div v-loading="isSelected||!isEntryPaid" :element-loading-text="translations['poker_picker_loading_info'][language]">
                 <el-row v-for="typeIndex in [0,1,2,3]" justify="space-evenly" class="poker-row">
                     <el-space>
                         {{typesDisplay[language][typeIndex]}}
@@ -33,13 +33,13 @@
 <script setup lang="ts">
 
 import PokerImage from "./PokerImage.vue";
-import {computed, ref} from "@vue/runtime-core";
+import {computed, ref, watch} from "@vue/runtime-core";
 import {useStore} from "vuex";
 import {Money, Trophy} from "@element-plus/icons-vue";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
-const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.currentBalance);
+const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.balance);
 const highestBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.highestBalance);
 const balanceChangeDisplay = ref("");
 const balanceChangeType = ref("success");
@@ -56,13 +56,26 @@ const correctTypeIndex = ref(0);
 const correctType = ref("heart");
 const selectedValue = ref("");
 const selectedType = ref("");
-const isStarted = ref(false);
-const isSelected = ref(true);
+const isSelected = ref(false);
+const isEntryPaid = ref(computed(() => useStore().state.appGlobal.userInfo).value.isEntryPaid);
 const isLoading = ref(false);
 const alertTitle = ref("");
 const alertTitleAns = ref("");
 const alertType = ref("success");
 const store = useStore();
+
+watch(
+    [
+        () => computed(() => store.state.appGlobal.userInfo).value.balance,
+        () => computed(() => store.state.appGlobal.userInfo).value.isEntryPaid,
+    ],
+    (val, preVal) => {
+        currentBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.balance;
+        highestBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.highestBalance;
+        isEntryPaid.value = computed(() => store.state.appGlobal.userInfo).value.isEntryPaid;
+    }
+);
+
 
 const generateRandomAnswer = () =>{
     if(currentBalanceDisplay.value < 10){
@@ -72,38 +85,42 @@ const generateRandomAnswer = () =>{
         });
         return;
     }
-    if(isStarted.value == true){
+    if(isEntryPaid.value == false){
         store.dispatch("appGlobal/playGame", 10);
         balanceChangeType.value = "danger";
-        balanceChangeDisplay.value = "-10 Start Game Cost";
-        updateBalanceDisplay();
+        balanceChangeDisplay.value = translations.value["balance_change_display"][0][language.value];
     }
     isLoading.value = true;
-    isStarted.value = true;
     correctTypeIndex.value = Math.floor(Math.random() * 4);
     correctType.value = types[correctTypeIndex.value];
     correctValueIndex.value = Math.floor(Math.random() * 13);
     correctValue.value = values[correctValueIndex.value];
-    console.log("Random Type: " + typesDisplay[language.value][correctTypeIndex.value]);
-    console.log("Random Value: " + valuesDisplay[correctValueIndex.value]);
+    console.log("[INFO] Generated Random Poker: ",
+        typesDisplay[language.value][correctTypeIndex.value],
+        valuesDisplay[correctValueIndex.value]);
     isLoading.value = false;
     isSelected.value = false;
+    const gameRecord = {
+        time: formatDate(new Date()),
+        gameResult: "Entry Fee",
+        randomPoker: "",
+        selectedPoker: "",
+        gamePrize: -10,
+        balance: computed(() => store.state.appGlobal.userInfo).value.balance,
+    };
+    store.dispatch("appGlobal/recordGame", gameRecord);
 };
 
 const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
-    if(isStarted.value == false){
-        generateRandomAnswer();
-    }
     if(isSelected.value == true){
         console.log("You have already selected!");
         return;
     }
-
     selectedType.value = types[typeIndex];
     selectedValue.value = values[valueIndex];
 
     if(typeIndex == correctTypeIndex.value && valueIndex == correctValueIndex.value){
-        winPrize(208, "Win First Prize: Same Poker");
+        winPrize(208, 1);
         ElMessage({
             message: translations.value["poker_picker_message_1"][language.value],
             type: 'success',
@@ -111,7 +128,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "success";
     }
     else if(typeIndex == correctTypeIndex.value) {
-        winPrize(13, "Win Third Prize: Same Colour");
+        winPrize(13, 3);
         ElMessage({
             message: translations.value["poker_picker_message_2"][language.value],
             type: 'warning',
@@ -119,7 +136,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "warning";
     }
     else if(valueIndex == correctValueIndex.value){
-        winPrize(52, "Win Second Prize: Same Value");
+        winPrize(52, 2);
         ElMessage({
             message: translations.value["poker_picker_message_3"][language.value],
             type: 'warning',
@@ -127,14 +144,14 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "warning";
     }
     else{
-        winPrize(0, "Win Nothing");
+        winPrize(0, 4);
         ElMessage({
             message: translations.value["poker_picker_message_4"][language.value],
             type: 'error',
         });
         alertType.value = "error";
     }
-    updateBalanceDisplay();
+    updateUserInfo();
     isSelected.value = true;
     alertTitleAns.value = translations.value["poker_picker_display_correct_poker"][language.value] + typesDisplay[language.value][correctTypeIndex.value] + " " + valuesDisplay[correctValueIndex.value];
     alertTitle.value = translations.value["poker_picker_display_your_choice"][language.value] + typesDisplay[language.value][typeIndex] + " " + valuesDisplay[valueIndex];
@@ -149,35 +166,71 @@ const onMouseLeave = (event: any) => {
     event.target.style.border = "";
 };
 
-const updateBalanceDisplay = () =>{
-    currentBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.currentBalance;
-    highestBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.highestBalance;
-}
-
-const winPrize = (prize: Number, explain: String) => {
+const winPrize = (prize: number, explain: number) => {
     store.dispatch("appGlobal/winGame", prize);
     balanceChangeType.value = "success";
-    balanceChangeDisplay.value = "+" + prize.toString() + " " + explain;
-    ElMessage({
-        message: translations.value["win_prize_message"][language.value] + " " + prize.toString() + " " + translations.value["chanidian_dollar"][language.value] + "!",
-        type: 'success',
-    });
-    updateBalanceDisplay();
+    balanceChangeDisplay.value = "+" + prize.toString() + " " + translations.value["balance_change_display"][explain][language.value];
     const gameRecord = {
-        username: computed(() => store.state.auth.user).value.username,
-        gameResult: explain,
+        time: formatDate(new Date()),
+        gameResult: translations.value["balance_change_display"][explain][0],
         randomPoker: correctType.value + " " + correctValue.value,
         selectedPoker: selectedType.value + " " + selectedValue.value,
         gamePrize: prize,
-        balance: currentBalanceDisplay.value,
+        balance: computed(() => store.state.appGlobal.userInfo.balance).value,
     };
-    console.log(gameRecord);
-    store.dispatch("appGlobal/createGameRecord", gameRecord);
     store.dispatch("appGlobal/recordGame", gameRecord);
     if(prize == 0){
         balanceChangeDisplay.value = "";
     }
-}
+};
+
+const formatDate = (date: Date) => {
+    return (
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-') +
+        ' ' +
+        [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+        ].join(':')
+    );
+};
+
+const padTo2Digits = (num: Number) => {
+    return num.toString().padStart(2, '0');
+};
+
+const updateUserInfo = () => {
+    const userInfo = computed(() => store.state.appGlobal.userInfo).value;
+    const user = computed(() => store.state.auth.user).value;
+    if(user == null){
+        console.log("Not Logged in");
+        return;
+    }
+    const info = {
+        id: user.username,
+        username: user.username,
+        balance: userInfo.balance,
+        highestBalance: userInfo.highestBalance,
+        gamePlayed: userInfo.gamePlayed,
+        samePokerCnt: userInfo.samePokerCnt,
+        sameValueCnt: userInfo.sameValueCnt,
+        sameColorCnt: userInfo.sameColorCnt,
+        differentCnt: userInfo.differentCnt,
+        gameRecords: userInfo.gameRecords,
+        isEntryPaid: userInfo.isEntryPaid,
+    };
+    try{
+        store.dispatch("appGlobal/updateUserInfo", info);
+    }
+    catch (error){
+        console.log(error);
+    }
+};
 
 defineExpose({isSelected, generateRandomAnswer});
 

@@ -12,23 +12,14 @@ export const createUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      gameRecords
+      isEntryPaid
       owner
     }
   }
@@ -44,23 +35,14 @@ export const updateUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      gameRecords
+      isEntryPaid
       owner
     }
   }
@@ -76,80 +58,14 @@ export const deleteUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      owner
-    }
-  }
-`;
-export const createGameRecord = /* GraphQL */ `
-  mutation CreateGameRecord(
-    $input: CreateGameRecordInput!
-    $condition: ModelGameRecordConditionInput
-  ) {
-    createGameRecord(input: $input, condition: $condition) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
-      owner
-    }
-  }
-`;
-export const updateGameRecord = /* GraphQL */ `
-  mutation UpdateGameRecord(
-    $input: UpdateGameRecordInput!
-    $condition: ModelGameRecordConditionInput
-  ) {
-    updateGameRecord(input: $input, condition: $condition) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
-      owner
-    }
-  }
-`;
-export const deleteGameRecord = /* GraphQL */ `
-  mutation DeleteGameRecord(
-    $input: DeleteGameRecordInput!
-    $condition: ModelGameRecordConditionInput
-  ) {
-    deleteGameRecord(input: $input, condition: $condition) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
+      gameRecords
+      isEntryPaid
       owner
     }
   }

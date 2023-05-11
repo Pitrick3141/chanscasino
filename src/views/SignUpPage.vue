@@ -114,8 +114,22 @@ export default {
                     message: this.translations["confirm_signup_success_message"][this.language],
                     type: 'success',
                 });
+                const userInfo = computed(() => this.$store.state.appGlobal.userInfo).value;
+                const newUserInfo = {
+                    id: this.username,
+                    username: this.username,
+                    balance: userInfo.balance,
+                    highestBalance: userInfo.highestBalance,
+                    gamePlayed: userInfo.gamePlayed,
+                    samePokerCnt: userInfo.samePokerCnt,
+                    sameValueCnt: userInfo.sameValueCnt,
+                    sameColorCnt: userInfo.sameColorCnt,
+                    differentCnt: userInfo.differentCnt,
+                    gameRecords: userInfo.gameRecords,
+                    isEntryPaid: userInfo.isEntryPaid,
+                };
+                await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
                 this.$router.push("/");
-
             }
             catch (error){
                 this.error = error;

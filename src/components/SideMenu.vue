@@ -5,6 +5,10 @@
                 class="el-menu-vertical"
                 @select="handleSelect"
         >
+            <el-menu-item index="6">
+                <el-icon><house /></el-icon>
+                <span>{{ translations['side_menu_6'][language] }}</span>
+            </el-menu-item>
             <el-sub-menu index="1">
                 <template #title>
                     <el-icon><question-filled /></el-icon>
@@ -19,7 +23,7 @@
                 </el-menu-item-group>
             </el-sub-menu>
             <el-menu-item index="2">
-                <el-icon><icon-menu /></el-icon>
+                <el-icon><memo /></el-icon>
                 <span>{{ translations['side_menu_2'][language] }}</span>
             </el-menu-item>
             <el-menu-item index="3">
@@ -46,10 +50,11 @@
 <script lang="ts" setup>
 import {
     InfoFilled,
-    Menu as IconMenu,
+    House,
     QuestionFilled,
     DataLine,
-    ChatDotRound
+    ChatDotRound,
+    Memo,
 } from '@element-plus/icons-vue';
 import {useStore} from "vuex";
 import {computed} from "@vue/runtime-core";
@@ -58,22 +63,11 @@ const language = computed(() => store.state.appGlobal.language);
 const translations = computed(() => store.state.appGlobal.translations);
 
 const handleSelect = (key: string, keyPath: string[]) => {
-    console.log("Side Menu Select Key: " + key);
     if(key[0] == '1'){
-        if(key[2]!='1'){
-            ElMessage({
-                message: translations.value["under_construction"][language.value],
-                type: 'info',
-            });
-        }
         emit("showInstruction", key[2]);
     }
     else if(key[0] == '2')
     {
-        ElMessage({
-            message: translations.value["under_construction"][language.value],
-            type: 'info',
-        });
         emit("showUserInfo");
     }
     else if(key[0] == '3')
@@ -92,14 +86,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
     }
     else if(key[0] == '5'){
         store.dispatch("appGlobal/updateGlobalLanguage", parseInt(key[2]) - 1);
-        ElMessage({
-            message: translations.value["change_language_message"][language.value],
-            type: 'success',
-        });
+    }
+    else if(key[0] == '6'){
+        emit("showGame");
     }
 }
 
-const emit = defineEmits(["showInstruction", "changeLanguage", "showUserInfo"]);
+const emit = defineEmits(["showInstruction", "showUserInfo", "showGame"]);
 </script>
 
 <style scoped>

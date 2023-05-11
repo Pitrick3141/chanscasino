@@ -56,8 +56,15 @@ export const auth = {
             }
         },
         async authAction({commit}){
-            const userInfo = await Auth.currentUserInfo();
-            commit("setUser", userInfo);
+            try{
+                const userInfo = await Auth.currentUserInfo();
+                commit("setUser", userInfo);
+                return userInfo;
+            }
+            catch (error){
+                console.log("[ERROR] Auto Login Failed: ", error);
+                return null;
+            }
         }
     },
     getters:{

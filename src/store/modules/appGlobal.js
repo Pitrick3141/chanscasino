@@ -2,7 +2,7 @@ import {API, graphqlOperation} from "aws-amplify";
 import {createUserInfo as createUserInfoMutation} from "../../graphql/mutations.js";
 import {getUserInfo as getUserInfoQuery} from "../../graphql/queries.js";
 import {updateUserInfo as updateUserInfoMutation} from "../../graphql/mutations.js";
-import {createGameRecord as createGameRecordMutation} from "../../graphql/mutations.js";
+import {toRaw} from "vue";
 
 export default {
     namespaced: true,
@@ -11,35 +11,52 @@ export default {
             translations: {
                 "side_menu_1":["Instructions", "教程"],
                 "side_menu_1_group_1": ["Game Rules", "游戏玩法"],
-                "side_menu_1_group_1_item_1": ["Classic Game", "经典模式"],
-                "side_menu_1_group_1_item_2": ["Extra Game", "进阶模式"],
+                "side_menu_1_group_1_item_1": ["How to Play", "游戏规则"],
+                "side_menu_1_group_1_item_2": ["How to Score", "得分规则"],
                 "side_menu_1_group_2": ["Others", "其他教程"],
                 "side_menu_1_group_2_item_1": ["How to View Statistics", "如何查看统计数据"],
-                "side_menu_2": ["User Info", "用户信息"],
+                "side_menu_2": ["Info & Records", "信息及记录"],
                 "side_menu_3": ["Statics", "统计数据"],
                 "side_menu_4": ["About", "关于"],
                 "side_menu_5": ["Language/语言", "语言/Language"],
                 "side_menu_5_English": ["English", "English"],
                 "side_menu_5_Chinese": ["简体中文", "简体中文"],
+                "side_menu_6": ["Home", "主页"],
                 "poker_picker_restart_button": ["Restart Game", "重新开始游戏"],
-                "poker_picker_loading_info": ["You have already selected, press Restart Game to Restart", "你已经做出选择，请点击重新开始游戏按钮"],
+                "poker_picker_loading_info": ["Please press Restart Game to Restart", "请点击重新开始游戏按钮"],
                 "poker_picker_message_1": ["Congratulations! You Have Selected The Correct Poker!", "恭喜！你选中了正确的扑克！"],
                 "poker_picker_message_2": ["You Have Selected The Correct Type But Wrong Value", "你选中了正确的花色但是错误的点数"],
                 "poker_picker_message_3": ["You Have Selected The Correct Value But Wrong Type", "你选中了正确的点数但是错误的花色"],
                 "poker_picker_message_4": ["You Have Neither Selected The Correct Type and Correct Value", "你既没有选中正确的点数也没有选中正确的花色"],
                 "poker_picker_display_correct_poker": ["Correct Poker: ", "正确的扑克："],
                 "poker_picker_display_your_choice": ["Your Choice: ", "你的选择："],
-                "tutorials_classic_game_title": ["Classic Game Instructions", "经典模式教程"],
-                "tutorials_classic_game_link": ["Try Regular Game 》", "开始一场经典模式 》"],
+                "tutorials_classic_game_title": ["Game Instructions", "游戏规则"],
+                "tutorials_classic_game_link": ["Try It Now 》", "开一把试试 》"],
                 "tutorials_classic_game_content": [
                     "Choose a card from a standard deck and compare it with a randomly determined card.",
                     "从牌堆中选择一张扑克牌并与提前随机选择的扑克牌相比较."
                 ],
-                "tutorials_extra_game_title": ["Extra Game Instructions", "进阶模式教程"],
-                "tutorials_extra_game_link": ["Try Extra Game 》", "开始一场进阶模式 》"],
-                "tutorials_extra_game_content": [
-                    "Choose a card from a standard deck and compare it with a randomly determined card.",
-                    "从牌堆中选择一张扑克牌并与提前随机选择的扑克牌相比较."
+                "tutorials_extra_game_title": ["Pay-ins and Pay-outs", "得分规则"],
+                "tutorials_extra_game_link": ["Try It Now 》", "开一把试试 》"],
+                "tutorials_extra_game_content_1": [
+                    "Entry Fee: 10 Chanidian Dollars",
+                    "入场费：10陈元"
+                ],
+                "tutorials_extra_game_content_2": [
+                    "If your choice is identical to the randomly generated poker: You WIN 208 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克完全相同：你获得208陈元的奖励"
+                ],
+                "tutorials_extra_game_content_3": [
+                    "If your choice has the same value as the randomly generated poker: You WIN 52 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克点数相同：你获得52陈元的奖励"
+                ],
+                "tutorials_extra_game_content_4": [
+                    "If your choice has the same type as the randomly generated poker: You WIN 13 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克花色相同：你获得13陈元的奖励"
+                ],
+                "tutorials_extra_game_content_5": [
+                    "If your choice is totally different from the randomly generated poker: You WIN Nothing",
+                    "如果你的选择与随机生成的扑克完全不同：你什么也没得到"
                 ],
                 "tutorials_view_statistics_title": ["How to View Statistics", "如何查看统计数据"],
                 "tutorials_view_statistics_link": ["View Statistics 》", "查看统计数据 》"],
@@ -99,15 +116,48 @@ export default {
                 "current_balance": ["Your Current Balance: ", "您当前的余额: "],
                 "highest_balance": ["Your History Highest Balance: ", "您的历史最高余额: "],
                 "game_played": ["Total Game Played: ", "总计进行的游戏场数: :"],
+                "info_user_info": ["User Info", "用户信息"],
+                "info_username": ["Username", "用户名"],
+                "info_email": ["Email", "电子邮件"],
+                "info_id": ["User ID", "用户ID"],
+                "info_email_verified": ["Email Verification", "电子邮件验证"],
+                "info_game_records": ["Game Records", "游戏记录"],
+                "info_time": ["Time", "时间"],
+                "info_correct_poker": ["Correct Poker", "正确的扑克"],
+                "info_selected_poker": ["Selected Poker", "选择的扑克"],
+                "info_description": ["Description", "说明"],
+                "info_balance_change": ["Balance Change", "余额变化"],
+                "info_new_balance": ["New Balance", "新余额"],
+                "balance_change_display": [
+                    ["-10 Entry Fee", "-10 开始游戏费用"],
+                    ["Win First Prize: Same Poker", "获得一等奖：完全相同"],
+                    ["Win Second Prize: Same Value", "获得二等奖：相同的点数"],
+                    ["Win Third Prize: Same Colour", "获得三等奖：相同的花色"],
+                    ["Win Nothing", "什么也没有获得"],
+                ],
+                "info_danger_operation":["Danger Operation", "危险操作"],
+                "info_show": ["Show", "显示"],
+                "info_hide": ["Hide", "隐藏"],
+                "info_clear_data": ["Clear User Data", "清除用户数据"],
+                "info_clear_confirm": ["Are you sure to clear all user data?", "你确定要清除全部用户数据吗？"],
+                "info_clear_cancel": ["Cancel", "取消"],
+                "info_clear_clear": ["Clear", "清除"],
+                "info_clear_success": ["All user data cleared", "所有用户信息已清除"],
 
             },
             language: 0,
             userInfo: {
-                currentBalance: 100,
+                balance: 100,
                 highestBalance: 100,
-                gamePlayed: 10,
-                gameRecords: [],
-            }
+                gamePlayed: 0,
+                samePokerCnt: 0,
+                sameValueCnt: 0,
+                sameColorCnt: 0,
+                differentCnt: 0,
+                gameRecords: JSON.stringify([]),
+                isEntryPaid: false,
+            },
+            gameRecords: [],
         }
     },
     mutations: {
@@ -115,32 +165,59 @@ export default {
             state.language = lang;
         },
         changeCurrentBalance(state, val){
-            state.userInfo.currentBalance = val;
-            if(state.userInfo.currentBalance > state.userInfo.highestBalance){
-                state.userInfo.highestBalance = state.userInfo.currentBalance;
+            state.userInfo.balance = val;
+            if(state.userInfo.balance > state.userInfo.highestBalance){
+                state.userInfo.highestBalance = state.userInfo.balance;
             }
         },
         spendBalance(state, val){
-            state.userInfo.currentBalance -= val;
+            state.userInfo.isEntryPaid = true;
+            state.userInfo.balance -= val;
         },
         earnBalance(state, val){
-            state.userInfo.currentBalance += val;
-            if(state.userInfo.currentBalance > state.userInfo.highestBalance){
-                state.userInfo.highestBalance = state.userInfo.currentBalance;
+            state.userInfo.isEntryPaid = false;
+            state.userInfo.balance += val;
+            if(state.userInfo.balance > state.userInfo.highestBalance){
+                state.userInfo.highestBalance = state.userInfo.balance;
             }
         },
         recordGame(state, result){
-            state.userInfo.gameRecords.push(result);
-            console.log(state.userInfo.gameRecords);
+            state.gameRecords.push(result);
+            if(result.gameResult === "Win First Prize: Same Poker"){
+                state.userInfo.samePokerCnt += 1;
+            }
+            else if(result.gameResult === "Win Second Prize: Same Value"){
+                state.userInfo.sameValueCnt += 1;
+            }
+            else if(result.gameResult === "Win Third Prize: Same Colour"){
+                state.userInfo.sameColorCnt += 1;
+            }
+            else {
+                state.userInfo.differentCnt += 1;
+            }
+            state.userInfo.gamePlayed += 1;
+
+            state.userInfo.gameRecords = JSON.stringify(state.gameRecords);
+            console.log("[INFO] Current Game Records: ", toRaw(state.gameRecords));
+            console.log("[INFO] Current User Info: ", toRaw(state.userInfo));
         },
         setUserInfo(state, payload){
-            state.userInfo = payload;
+            state.userInfo.balance = payload.balance;
+            state.userInfo.highestBalance = payload.highestBalance;
+            state.userInfo.gamePlayed = payload.gamePlayed;
+            state.userInfo.samePokerCnt = payload.samePokerCnt;
+            state.userInfo.sameValueCnt = payload.sameValueCnt;
+            state.userInfo.sameColorCnt = payload.sameColorCnt;
+            state.userInfo.differentCnt = payload.differentCnt;
+            state.userInfo.gameRecords = payload.gameRecords;
+            state.gameRecords = JSON.parse(payload.gameRecords);
+            state.userInfo.isEntryPaid = payload.isEntryPaid;
         }
     },
     actions: {
         updateGlobalLanguage(context, lang) {
             context.commit("changeGlobalLanguage", lang);
-            console.log("language changed: " + lang.toString());
+            console.log("[INFO] language changed: " + lang.toString());
         },
         playGame(context, cost){
             context.commit("spendBalance", cost);
@@ -153,38 +230,30 @@ export default {
         },
         async createUserInfo(_, newUserInfo){
             try{
-                await API.graphql(graphqlOperation(createUserInfoMutation, {input: newUserInfo}));
+                const info = await API.graphql(graphqlOperation(createUserInfoMutation, {input: newUserInfo}));
+                console.log("[INFO] User Created in backend: ", info.data.createUserInfo);
             }
             catch(error){
-                console.log("createUserInfo", error);
+                console.log("[Error] Error occurred at createUserInfo: ", error);
             }
-
         },
-        async getUserInfo({commit}, userId){
-            return API.graphql(graphqlOperation(getUserInfoQuery, {id: userId}));
+        async getUserInfo(_, userId){
+            const info = await API.graphql(graphqlOperation(getUserInfoQuery, {id: userId}))
+            console.log("[INFO] User Info fetched from backend: ", info.data.getUserInfo);
+            return info.data.getUserInfo;
         },
         async setUserInfo({commit}, info){
-            console.log(info);
+            console.log("[INFO] User Info is applied to local: ", info);
             commit("setUserInfo", info);
         },
         async updateUserInfo(_, userInfo){
             try{
-                await API.graphql(graphqlOperation(updateUserInfoMutation, {input: userInfo}));
+                const info = await API.graphql(graphqlOperation(updateUserInfoMutation, {input: userInfo}));
+                console.log("[INFO] User Updated in backend: ", info.data.updateUserInfo);
             }
             catch(error){
-                console.log("updateUserInfo", error);
+                console.log("[ERROR] Error occurred at updateUserInfo: ", error);
             }
-
-        },
-        async createGameRecord(_, newGameRecord){
-            try{
-                const record = await API.graphql(graphqlOperation(createGameRecordMutation, {input: newGameRecord}));
-                console.log(record);
-            }
-            catch(error){
-                console.log("createGameRecord", error);
-            }
-
         },
     },
     getters: {
@@ -196,6 +265,6 @@ export default {
         },
         userInfo(state){
             return state.userInfo;
-        }
+        },
     }
 }

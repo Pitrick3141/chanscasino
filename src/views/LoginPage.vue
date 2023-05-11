@@ -41,6 +41,7 @@
 
 import {mapActions, useStore} from "vuex";
 import {computed} from "@vue/runtime-core";
+
 export default {
     name: "Login",
     data: ()=>({
@@ -55,13 +56,15 @@ export default {
     setup(){
         const language = computed(() => useStore().state.appGlobal.language);
         const translations = computed(() => useStore().state.appGlobal.translations);
+
         return{
             language, translations
         };
     },
     methods:{
         ...mapActions({
-            loginVue: "auth/login"
+            loginVue: "auth/login",
+            getUserInfoQuery: "appGlobal/getUserInfo",
         }),
         async login(){
             this.error_message = '';
@@ -82,6 +85,14 @@ export default {
                     message: this.translations['login_success_message'][this.language] + ", " + this.username + "!",
                     type: 'success',
                 });
+                try{
+                    const info = await this.$store.dispatch("appGlobal/getUserInfo", this.username);
+                    this.$store.dispatch("appGlobal/setUserInfo", info);
+                }
+                catch (error){
+                    const info = error.data.getUserInfo;
+                    console.log("returnedInfo", info);
+                }
                 this.$router.push("/");
             }
             catch (error) {
@@ -114,7 +125,21 @@ export default {
                     type: 'success',
                 });
                 this.$router.push("/");
-
+                const userInfo = computed(() => this.$store.state.appGlobal.userInfo).value;
+                const newUserInfo = {
+                    id: this.username,
+                    username: this.username,
+                    balance: userInfo.balance,
+                    highestBalance: userInfo.highestBalance,
+                    gamePlayed: userInfo.gamePlayed,
+                    samePokerCnt: userInfo.samePokerCnt,
+                    sameValueCnt: userInfo.sameValueCnt,
+                    sameColorCnt: userInfo.sameColorCnt,
+                    differentCnt: userInfo.differentCnt,
+                    gameRecords: userInfo.gameRecords,
+                    isEntryPaid: userInfo.isEntryPaid,
+                };
+                await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
             }
             catch (error){
                 this.error = error;

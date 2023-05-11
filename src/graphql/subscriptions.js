@@ -12,23 +12,14 @@ export const onCreateUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      gameRecords
+      isEntryPaid
       owner
     }
   }
@@ -44,23 +35,14 @@ export const onUpdateUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
+      gameRecords
+      isEntryPaid
       owner
     }
   }
@@ -76,80 +58,14 @@ export const onDeleteUserInfo = /* GraphQL */ `
       createdAt
       updatedAt
       gamePlayed
+      samePokerCnt
+      sameValueCnt
+      sameColorCnt
+      differentCnt
       balance
       highestBalance
-      gameRecords {
-        items {
-          id
-          username
-          createdAt
-          randomPoker
-          selectedPoker
-          gameResult
-          gamePrize
-          balance
-          updatedAt
-          owner
-        }
-        nextToken
-      }
-      owner
-    }
-  }
-`;
-export const onCreateGameRecord = /* GraphQL */ `
-  subscription OnCreateGameRecord(
-    $filter: ModelSubscriptionGameRecordFilterInput
-    $owner: String
-  ) {
-    onCreateGameRecord(filter: $filter, owner: $owner) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdateGameRecord = /* GraphQL */ `
-  subscription OnUpdateGameRecord(
-    $filter: ModelSubscriptionGameRecordFilterInput
-    $owner: String
-  ) {
-    onUpdateGameRecord(filter: $filter, owner: $owner) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeleteGameRecord = /* GraphQL */ `
-  subscription OnDeleteGameRecord(
-    $filter: ModelSubscriptionGameRecordFilterInput
-    $owner: String
-  ) {
-    onDeleteGameRecord(filter: $filter, owner: $owner) {
-      id
-      username
-      createdAt
-      randomPoker
-      selectedPoker
-      gameResult
-      gamePrize
-      balance
-      updatedAt
+      gameRecords
+      isEntryPaid
       owner
     }
   }
