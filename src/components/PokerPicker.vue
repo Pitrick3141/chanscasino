@@ -207,7 +207,7 @@ const padTo2Digits = (num: Number) => {
     return num.toString().padStart(2, '0');
 };
 
-const updateUserInfo = async() => {
+const updateUserInfo = () => {
     user.value = computed(() => store.state.auth.user).value
     const userInfo = computed(() => store.state.appGlobal.userInfo).value;
     if(user.value == null){
@@ -229,7 +229,7 @@ const updateUserInfo = async() => {
         language: language.value,
     };
     try{
-        await store.dispatch("appGlobal/updateUserInfo", info);
+        store.dispatch("appGlobal/updateUserInfo", info);
     }
     catch (error){
         console.log(error);
