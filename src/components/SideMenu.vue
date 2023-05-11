@@ -58,11 +58,12 @@ import {
 } from '@element-plus/icons-vue';
 import {useStore} from "vuex";
 import {computed} from "@vue/runtime-core";
+import {ElMessageBox} from "element-plus";
 const store = useStore();
 const language = computed(() => store.state.appGlobal.language);
 const translations = computed(() => store.state.appGlobal.translations);
 
-const handleSelect = (key: string, keyPath: string[]) => {
+const handleSelect = (key: string) => {
     if(key[0] == '1'){
         emit("showInstruction", key[2]);
     }
@@ -79,10 +80,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
     }
     else if(key[0] == '4')
     {
-        ElMessage({
-            message: translations.value["under_construction"][language.value],
-            type: 'info',
-        });
+        ShowAbout();
     }
     else if(key[0] == '5'){
         store.dispatch("appGlobal/updateGlobalLanguage", parseInt(key[2]) - 1);
@@ -93,8 +91,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 const emit = defineEmits(["showInstruction", "showUserInfo", "showGame"]);
+
+const ShowAbout = () => {
+    ElMessageBox.alert(
+        translations.value['about_content'][language.value],
+        translations.value['about_title'][language.value]
+    );
+}
 </script>
-
-<style scoped>
-
-</style>

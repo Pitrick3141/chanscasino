@@ -1,9 +1,13 @@
+<!--suppress CssUnusedSymbol, TypeScriptValidateTypes -->
 <template>
-    <el-alert v-if="language==1" title="游戏记录表格内的数据暂不支持翻译为中文，十分抱歉" type="warning" />
     <el-divider content-position="left">{{ translations["info_user_info"][language] }}</el-divider>
-    <el-descriptions>
+    <el-alert v-if="user==null" :title="translations['info_not_login'][language]" type="error" />
+    <el-descriptions v-if="user!=null">
+        <!--suppress TypeScriptUnresolvedReference -->
         <el-descriptions-item :label="translations['info_username'][language]">{{ user.username }}</el-descriptions-item>
+        <!--suppress TypeScriptUnresolvedReference -->
         <el-descriptions-item :label="translations['info_email'][language]">{{ user.attributes.email }}</el-descriptions-item>
+        <!--suppress TypeScriptUnresolvedReference -->
         <el-descriptions-item :label="translations['info_id'][language]">{{ user.id }}</el-descriptions-item>
 
     </el-descriptions>
@@ -32,6 +36,8 @@
         </el-popconfirm>
     </div>
     <el-divider content-position="left">{{ translations["info_game_records"][language] }}</el-divider>
+    <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
+    <el-alert v-if="language==1" title="游戏记录表格内的数据暂不支持翻译为中文，十分抱歉" type="warning" />
     <el-table
         :data="tableData"
         style="width: auto"
@@ -52,6 +58,7 @@ import {computed, toRaw, watch} from "@vue/runtime-core";
 import {ref} from "vue";
 import {WarnTriangleFilled} from "@element-plus/icons-vue";
 import {API, graphqlOperation} from "aws-amplify";
+// @ts-ignore
 import {deleteUserInfo as deleteUserInfoMutation} from "../graphql/mutations.js";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
@@ -64,7 +71,7 @@ const showDangerOption = ref(false);
 
 watch(
     () => computed(() => store.state.appGlobal.gameRecords).value,
-    (val, preVal) => {
+    () => {
         tableData.value = computed(() => store.state.appGlobal.gameRecords).value;
     }
 );
@@ -78,7 +85,7 @@ interface GameRecord {
     balance: number,
 }
 
-const tableRowClassName = ({row, rowIndex,}: { row: GameRecord, rowIndex: number }) => {
+const tableRowClassName = ({row}: { row: GameRecord }) => {
     const rowItem = toRaw(row);
     const gameResult = rowItem.gameResult;
     if (gameResult == "Win Nothing"){

@@ -12,4 +12,5 @@ type UserInfo @model @auth(rules: [{allow: owner}, {allow: public, operations: [
   highestBalance: Int!
   gameRecords: AWSJSON!
   isEntryPaid: Boolean!
+  language: Int!
 }

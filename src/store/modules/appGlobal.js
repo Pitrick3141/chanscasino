@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedReference
+
 import {API, graphqlOperation} from "aws-amplify";
 import {createUserInfo as createUserInfoMutation} from "../../graphql/mutations.js";
 import {getUserInfo as getUserInfoQuery} from "../../graphql/queries.js";
@@ -143,6 +145,12 @@ export default {
                 "info_clear_cancel": ["Cancel", "取消"],
                 "info_clear_clear": ["Clear", "清除"],
                 "info_clear_success": ["All user data cleared", "所有用户信息已清除"],
+                "info_not_login": ["User Info is unavailable without login", "未登录时用户信息不可用"],
+                "info_not_login_record": ["Game Records will be lost upon page refresh without login", "未登录时游戏记录将在页面刷新时丢失"],
+                "about_title": ["About", "关于"],
+                "about_content": [
+                    "This is a web game based on Vue3+Vite as frontend, AWS Amplify as hosting, AWS Cognito as authentication, AWS AppSync and DynamoDB as data interface. Developed by Yichen Wang as my Grade 12 Data Management ISP in 2023.",
+                    "这是一个前端基于Vue3+Vite，托管于AWS Amplify，使用AWS Cognito进行用户验证，使用AWS AppSync和DynamoDB进行数据接口的网页游戏。由Yichen Wang在2023年作为12年级数据管理课的ISP开发。"],
 
             },
             language: 0,
@@ -212,6 +220,7 @@ export default {
             state.userInfo.gameRecords = payload.gameRecords;
             state.gameRecords = JSON.parse(payload.gameRecords);
             state.userInfo.isEntryPaid = payload.isEntryPaid;
+            state.language = payload.language;
         }
     },
     actions: {
