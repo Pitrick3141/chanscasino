@@ -1,10 +1,11 @@
 <template>
+    <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
     <div class="container flex-col">
         <el-text class="">
             <el-icon><money /></el-icon>
             {{translations["current_balance"][language] + currentBalanceDisplay}}
         </el-text>
-        <el-text :type="balanceChangeType" tag="b">
+        <el-text :type="// noinspection TypeScriptValidateTypes balanceChangeType" tag="b">
             {{ balanceChangeDisplay }}
         </el-text>
         <br>
@@ -15,7 +16,7 @@
         <div class="poker-picker">
             <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="isEntryPaid" :loading="isLoading" @click="generateRandomAnswer">{{ translations["poker_picker_restart_button"][language]}}</el-button>
             <el-alert v-if="isSelected" :title="alertTitleAns" type="info" style="margin: 10px" />
-            <el-alert v-if="isSelected" :title="alertTitle" :type="alertType" style="margin: 10px" />
+            <el-alert v-if="isSelected" :title="alertTitle" :type="// noinspection TypeScriptValidateTypes alertType" style="margin: 10px" />
             <div v-loading="isSelected||!isEntryPaid" :element-loading-text="translations['poker_picker_loading_info'][language]">
                 <el-row v-for="typeIndex in [0,1,2,3]" justify="space-evenly" class="poker-row">
                     <el-space>
@@ -39,6 +40,7 @@ import {Money, Trophy} from "@element-plus/icons-vue";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
+const user = ref(computed(() => useStore().state.auth.user).value);
 const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.balance);
 const highestBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.highestBalance);
 const balanceChangeDisplay = ref("");
@@ -69,7 +71,7 @@ watch(
         () => computed(() => store.state.appGlobal.userInfo).value.balance,
         () => computed(() => store.state.appGlobal.userInfo).value.isEntryPaid,
     ],
-    (val, preVal) => {
+    () => {
         currentBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.balance;
         highestBalanceDisplay.value = computed(() => store.state.appGlobal.userInfo).value.highestBalance;
         isEntryPaid.value = computed(() => store.state.appGlobal.userInfo).value.isEntryPaid;
@@ -205,10 +207,10 @@ const padTo2Digits = (num: Number) => {
 };
 
 const updateUserInfo = () => {
+    user.value = computed(() => store.state.auth.user).value
     const userInfo = computed(() => store.state.appGlobal.userInfo).value;
-    const user = computed(() => store.state.auth.user).value;
-    if(user == null){
-        console.log("Not Logged in");
+    if(user.value == null){
+        console.log("[ERROR] Not Logged in, skipping update");
         return;
     }
     const info = {
@@ -223,6 +225,7 @@ const updateUserInfo = () => {
         differentCnt: userInfo.differentCnt,
         gameRecords: userInfo.gameRecords,
         isEntryPaid: userInfo.isEntryPaid,
+        language: language,
     };
     try{
         store.dispatch("appGlobal/updateUserInfo", info);

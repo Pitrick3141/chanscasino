@@ -1,7 +1,7 @@
 <template>
     <div class="common-layout">
         <el-container>
-            <side-menu @show-instruction="ShowInstruction" @show-user-info="ShowUserInfo" @show-game="ShowGame"/>
+            <side-menu @show-instruction="ShowInstruction" @show-user-info="ShowUserInfo" @show-game="ShowGame" />
             <el-container>
                 <el-header height="auto">
                     <navigation-bar/>
@@ -30,11 +30,8 @@ import ScrollAnnouncement from "../components/SystemAnnouncement.vue";
 import GameRecords from "../components/GameRecords.vue";
 import SideMenu from "../components/SideMenu.vue";
 import { ref } from "vue";
-import {useStore} from "vuex";
-import {computed} from "@vue/runtime-core";
 
 const instructionIndex = ref(0);
-const language = computed(() => useStore().state.appGlobal.language);
 const showPokerPicker = ref(true);
 const showGameRecords = ref(false);
 const pokerPickerRef = ref();

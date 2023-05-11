@@ -25,6 +25,7 @@ export default {
                     differentCnt: userInfo.differentCnt,
                     gameRecords: userInfo.gameRecords,
                     isEntryPaid: userInfo.isEntryPaid,
+                    language: computed(() => this.$store.state.appGlobal.userInfo).value,
                 };
                 await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
             }

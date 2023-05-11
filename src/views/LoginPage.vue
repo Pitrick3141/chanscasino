@@ -125,7 +125,7 @@ export default {
                     type: 'success',
                 });
                 this.$router.push("/");
-                const userInfo = computed(() => this.$store.state.appGlobal.userInfo).value;
+                const userInfo = computed(() => this.$store.state.appGlobal.language).value;
                 const newUserInfo = {
                     id: this.username,
                     username: this.username,
@@ -138,6 +138,7 @@ export default {
                     differentCnt: userInfo.differentCnt,
                     gameRecords: userInfo.gameRecords,
                     isEntryPaid: userInfo.isEntryPaid,
+                    language: this.language,
                 };
                 await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
             }

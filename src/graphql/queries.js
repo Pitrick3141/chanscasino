@@ -17,6 +17,7 @@ export const getUserInfo = /* GraphQL */ `
       highestBalance
       gameRecords
       isEntryPaid
+      language
       owner
     }
   }
@@ -42,6 +43,7 @@ export const listUserInfos = /* GraphQL */ `
         highestBalance
         gameRecords
         isEntryPaid
+        language
         owner
       }
       nextToken

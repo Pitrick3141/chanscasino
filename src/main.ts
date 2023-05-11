@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from "./router";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import "./assets/tailwind.css"
+import 'element-plus/theme-chalk/src/message-box.scss'
 import {Amplify} from "aws-amplify";
 import AmplifyVue from '@aws-amplify/ui-vue';
 // @ts-ignore

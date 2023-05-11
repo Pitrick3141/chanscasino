@@ -20,6 +20,7 @@ export const createUserInfo = /* GraphQL */ `
       highestBalance
       gameRecords
       isEntryPaid
+      language
       owner
     }
   }
@@ -43,6 +44,7 @@ export const updateUserInfo = /* GraphQL */ `
       highestBalance
       gameRecords
       isEntryPaid
+      language
       owner
     }
   }
@@ -66,6 +68,7 @@ export const deleteUserInfo = /* GraphQL */ `
       highestBalance
       gameRecords
       isEntryPaid
+      language
       owner
     }
   }
