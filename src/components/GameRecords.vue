@@ -34,6 +34,7 @@
                 <el-button type="danger" class="ml-5">{{ translations["info_clear_data"][language] }}</el-button>
             </template>
         </el-popconfirm>
+
     </div>
     <el-divider content-position="left">{{ translations["info_game_records"][language] }}</el-divider>
     <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
@@ -100,11 +101,30 @@ const tableRowClassName = ({row}: { row: GameRecord }) => {
 };
 
 const clearUserData = async() => {
+    const userInfo = computed(() => store.state.appGlobal.userInfo).value;
+    const nowTime = new Date(Date.parse(new Date().toString()));
+    const formatTime = nowTime.toISOString();
+    const backupUserInfo = {
+        id: user.username + "_removed_at_" + formatTime,
+        username: user.username,
+        balance: userInfo.balance,
+        highestBalance: userInfo.highestBalance,
+        gamePlayed: userInfo.gamePlayed,
+        samePokerCnt: userInfo.samePokerCnt,
+        sameValueCnt: userInfo.sameValueCnt,
+        sameColorCnt: userInfo.sameColorCnt,
+        differentCnt: userInfo.differentCnt,
+        gameRecords: userInfo.gameRecords,
+        isEntryPaid: userInfo.isEntryPaid,
+        language: language.value,
+    };
+    await store.dispatch("appGlobal/createUserInfo", backupUserInfo);
     await API.graphql(graphqlOperation(deleteUserInfoMutation, {input: {id: user.username}}));
     ElMessage({
         message: translations.value["info_clear_success"][language.value],
         type: 'success',
     });
+    location.reload();
 };
 
 </script>

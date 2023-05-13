@@ -1,4 +1,4 @@
-type UserInfo @model @auth(rules: [{allow: owner}, {allow: public, operations: [read], provider: apiKey}]) {
+type UserInfo @model @auth(rules: [{allow: owner}, { allow: groups, groups: ["Admin"] }]) {
   id: ID!
   username: String!
   createdAt: String!

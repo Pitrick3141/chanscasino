@@ -63,6 +63,8 @@ const store = useStore();
 const language = computed(() => store.state.appGlobal.language);
 const translations = computed(() => store.state.appGlobal.translations);
 
+document.title = translations.value["website_title"][language.value];
+
 const handleSelect = (key: string) => {
     if(key[0] == '1'){
         emit("showInstruction", key[2]);
@@ -84,6 +86,7 @@ const handleSelect = (key: string) => {
     }
     else if(key[0] == '5'){
         store.dispatch("appGlobal/updateGlobalLanguage", parseInt(key[2]) - 1);
+        document.title = translations.value['website_title'][language.value];
     }
     else if(key[0] == '6'){
         emit("showGame");

@@ -150,7 +150,11 @@ export default {
                 "about_title": ["About", "关于"],
                 "about_content": [
                     "This is a web game based on Vue3+Vite as frontend, AWS Amplify as hosting, AWS Cognito as authentication, AWS AppSync and DynamoDB as data interface. Developed by Yichen Wang as my Grade 12 Data Management ISP in 2023.",
-                    "这是一个前端基于Vue3+Vite，托管于AWS Amplify，使用AWS Cognito进行用户验证，使用AWS AppSync和DynamoDB进行数据接口的网页游戏。由Yichen Wang在2023年作为12年级数据管理课的ISP开发。"],
+                    "这是一个前端基于Vue3+Vite，托管于AWS Amplify，使用AWS Cognito进行用户验证，使用AWS AppSync和DynamoDB进行数据接口的网页游戏。由Yichen Wang在2023年作为12年级数据管理课的ISP开发。"
+                ],
+                "website_title": ["Chan's Casino", "老陈大赌场"],
+                "login_title": ["Log In", "登录"],
+                "signup_title": ["Sign Up", "注册"],
 
             },
             language: 0,
@@ -243,7 +247,7 @@ export default {
                 console.log("[INFO] User Created in backend: ", info.data.createUserInfo);
             }
             catch(error){
-                console.log("[Error] Error occurred at createUserInfo: ", error);
+                console.log("[Error] Error occurred at createUserInfo: ", error, "with given newUserInfo: ", newUserInfo);
             }
         },
         async getUserInfo(_, userId){
@@ -261,7 +265,7 @@ export default {
                 console.log("[INFO] User Updated in backend: ", info.data.updateUserInfo);
             }
             catch(error){
-                console.log("[ERROR] Error occurred at updateUserInfo: ", error);
+                console.log("[ERROR] Error occurred at updateUserInfo: ", error, "with given userInfo", userInfo);
             }
         },
     },

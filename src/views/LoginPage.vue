@@ -56,6 +56,7 @@ export default {
     setup(){
         const language = computed(() => useStore().state.appGlobal.language);
         const translations = computed(() => useStore().state.appGlobal.translations);
+        document.title = translations.value['login_title'][language.value];
 
         return{
             language, translations
@@ -138,7 +139,7 @@ export default {
                     differentCnt: userInfo.differentCnt,
                     gameRecords: userInfo.gameRecords,
                     isEntryPaid: userInfo.isEntryPaid,
-                    language: this.language.value,
+                    language: this.language,
                 };
                 await this.$store.dispatch("appGlobal/createUserInfo", newUserInfo);
             }
