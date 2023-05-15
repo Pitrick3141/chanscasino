@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElText: typeof import('element-plus/es')['ElText']
     GameRecords: typeof import('./src/components/GameRecords.vue')['default']
+    GameStatistics: typeof import('./src/components/GameStatistics.vue')['default']
     NavigationBar: typeof import('./src/components/NavigationBar.vue')['default']
     PokerImage: typeof import('./src/components/PokerImage.vue')['default']
     PokerPicker: typeof import('./src/components/PokerPicker.vue')['default']

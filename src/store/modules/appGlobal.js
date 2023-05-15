@@ -18,7 +18,7 @@ export default {
                 "side_menu_1_group_2": ["Others", "其他教程"],
                 "side_menu_1_group_2_item_1": ["How to View Statistics", "如何查看统计数据"],
                 "side_menu_2": ["Info & Records", "信息及记录"],
-                "side_menu_3": ["Statics", "统计数据"],
+                "side_menu_3": ["Statistics & Rankings", "统计数据及排行榜"],
                 "side_menu_4": ["About", "关于"],
                 "side_menu_5": ["Language/语言", "语言/Language"],
                 "side_menu_5_English": ["English", "English"],
@@ -45,16 +45,16 @@ export default {
                     "入场费：10陈元"
                 ],
                 "tutorials_extra_game_content_2": [
-                    "If your choice is identical to the randomly generated poker: You WIN 208 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克完全相同：你获得208陈元的奖励"
+                    "If your choice is identical to the randomly generated poker: You WIN 100 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克完全相同：你获得100陈元的奖励"
                 ],
                 "tutorials_extra_game_content_3": [
-                    "If your choice has the same value as the randomly generated poker: You WIN 52 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克点数相同：你获得52陈元的奖励"
+                    "If your choice has the same value as the randomly generated poker: You WIN 50 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克点数相同：你获得50陈元的奖励"
                 ],
                 "tutorials_extra_game_content_4": [
-                    "If your choice has the same type as the randomly generated poker: You WIN 13 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克花色相同：你获得13陈元的奖励"
+                    "If your choice has the same type as the randomly generated poker: You WIN 20 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克花色相同：你获得20陈元的奖励"
                 ],
                 "tutorials_extra_game_content_5": [
                     "If your choice is totally different from the randomly generated poker: You WIN Nothing",
@@ -131,7 +131,7 @@ export default {
                 "info_balance_change": ["Balance Change", "余额变化"],
                 "info_new_balance": ["New Balance", "新余额"],
                 "balance_change_display": [
-                    ["-10 Entry Fee", "-10 开始游戏费用"],
+                    ["Entry Fee", "开始游戏费用"],
                     ["Win First Prize: Same Poker", "获得一等奖：完全相同"],
                     ["Win Second Prize: Same Value", "获得二等奖：相同的点数"],
                     ["Win Third Prize: Same Colour", "获得三等奖：相同的花色"],
@@ -149,12 +149,31 @@ export default {
                 "info_not_login_record": ["Game Records will be lost upon page refresh without login", "未登录时游戏记录将在页面刷新时丢失"],
                 "about_title": ["About", "关于"],
                 "about_content": [
-                    "This is a web game based on Vue3+Vite as frontend, AWS Amplify as hosting, AWS Cognito as authentication, AWS AppSync and DynamoDB as data interface. Developed by Yichen Wang as my Grade 12 Data Management ISP in 2023.",
-                    "这是一个前端基于Vue3+Vite，托管于AWS Amplify，使用AWS Cognito进行用户验证，使用AWS AppSync和DynamoDB进行数据接口的网页游戏。由Yichen Wang在2023年作为12年级数据管理课的ISP开发。"
+                    "This is an online mini game based on Vue3+Vite as frontend, AWS Amplify as hosting, AWS Cognito as authentication, AWS AppSync and DynamoDB as data interface. Developed by Yichen Wang as my Grade 12 Data Management ISP in 2023.",
+                    "这是一个前端基于Vue3+Vite，托管于AWS Amplify，使用AWS Cognito进行用户验证，使用AWS AppSync和DynamoDB进行数据接口的在线迷你游戏。由Yichen Wang在2023年作为12年级数据管理课的ISP开发。"
                 ],
                 "website_title": ["Chan's Casino", "老陈大赌场"],
                 "login_title": ["Log In", "登录"],
                 "signup_title": ["Sign Up", "注册"],
+                "statistics_rankings": ["Rankings", "排行榜"],
+                "statistics_last_update": ["Statistics/Rankings Last Updated: ", "统计数据/排行榜上次更新: "],
+                "statistics_last_update_ago": ["Ago", "前"],
+                "statistics_last_update_hours": ["Hour(s)", "时"],
+                "statistics_last_update_minutes": ["Minute(s)", "分"],
+                "statistics_last_update_seconds": ["Second(s)", "秒"],
+                "statistics_rankings_id": ["User Name", "用户名"],
+                "statistics_rankings_highest_balance": ["History Highest Balance", "历史最高余额"],
+                "statistics_rankings_balance": ["Current Balance", "当前余额"],
+                "statistics_statistics": ["Statistics (Shared By All Players)", "统计数据 (所有玩家共用)"],
+                "statistics_game_played": ["Total Game Played", "游戏进行的总次数"],
+                "statistics_same_poker": ["Total Same Poker Selected", "选择相同扑克的总次数"],
+                "statistics_same_value": ["Total Same Value Selected", "选择相同点数的总次数"],
+                "statistics_same_color": ["Total Same Color Selected", "选择相同花色的总次数"],
+                "statistics_different": ["Total Different Poker Selected", "选择不同扑克的总次数"],
+                "statistics_cost": ["Players' Total Cost", "玩家的总计游戏成本"],
+                "statistics_gains": ["Players' Total Gains", "玩家的总计游戏回报"],
+                "statistics_profit": ["Chan's Profit", "老陈的利润"],
+                "game_records_auto_save": ["Your Game Records have been auto-saved", "您的游戏记录已自动保存"],
 
             },
             language: 0,
@@ -170,6 +189,13 @@ export default {
                 isEntryPaid: false,
             },
             gameRecords: [],
+            gameRates: {
+                "entry_fee": 10,
+                "same_poker_reward": 100,
+                "same_value_reward": 50,
+                "same_color_reward": 20,
+                "different_reward": 0,
+            },
         }
     },
     mutations: {
@@ -195,19 +221,21 @@ export default {
         },
         recordGame(state, result){
             state.gameRecords.push(result);
-            if(result.gameResult === "Win First Prize: Same Poker"){
-                state.userInfo.samePokerCnt += 1;
+            if(result.gameResult === "Entry Fee"){
+                state.userInfo.gamePlayed += 1;
             }
-            else if(result.gameResult === "Win Second Prize: Same Value"){
-                state.userInfo.sameValueCnt += 1;
+            else if(result.gameResult === "Win Nothing"){
+                state.userInfo.differentCnt += 1;
             }
             else if(result.gameResult === "Win Third Prize: Same Colour"){
                 state.userInfo.sameColorCnt += 1;
             }
-            else {
-                state.userInfo.differentCnt += 1;
+            else if(result.gameResult === "Win Second Prize: Same Value"){
+                state.userInfo.sameValueCnt += 1;
             }
-            state.userInfo.gamePlayed += 1;
+            else if(result.gameResult === "Win First Prize: Same Poker"){
+                state.userInfo.samePokerCnt += 1;
+            }
 
             state.userInfo.gameRecords = JSON.stringify(state.gameRecords);
             console.log("[INFO] Current Game Records: ", toRaw(state.gameRecords));
@@ -279,5 +307,8 @@ export default {
         userInfo(state){
             return state.userInfo;
         },
+        gameRates(state){
+            return state.gameRates;
+        }
     }
 }

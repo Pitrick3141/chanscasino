@@ -75,10 +75,7 @@ const handleSelect = (key: string) => {
     }
     else if(key[0] == '3')
     {
-        ElMessage({
-            message: translations.value["under_construction"][language.value],
-            type: 'info',
-        });
+        emit("showStatistics")
     }
     else if(key[0] == '4')
     {
@@ -93,7 +90,7 @@ const handleSelect = (key: string) => {
     }
 }
 
-const emit = defineEmits(["showInstruction", "showUserInfo", "showGame"]);
+const emit = defineEmits(["showInstruction", "showUserInfo", "showGame", "showStatistics"]);
 
 const ShowAbout = () => {
     ElMessageBox.alert(

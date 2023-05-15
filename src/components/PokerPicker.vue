@@ -41,6 +41,7 @@ import {Money, Trophy} from "@element-plus/icons-vue";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
+const gameRates = computed(() => useStore().state.appGlobal.gameRates).value;
 const user = ref(computed(() => useStore().state.auth.user).value);
 const currentBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.balance);
 const highestBalanceDisplay = ref(computed(() => useStore().state.appGlobal.userInfo).value.highestBalance);
@@ -65,6 +66,7 @@ const isLoading = ref(false);
 const alertTitle = ref("");
 const alertTitleAns = ref("");
 const alertType = ref("success");
+const updateCoolDown = ref(5);
 const store = useStore();
 
 watch(
@@ -81,7 +83,7 @@ watch(
 
 
 const generateRandomAnswer = () =>{
-    if(currentBalanceDisplay.value < 10){
+    if(currentBalanceDisplay.value < gameRates['entry_fee']){
         ElMessage({
             message: translations.value["not_enough_balance"][language.value],
             type: 'error',
@@ -89,9 +91,9 @@ const generateRandomAnswer = () =>{
         return;
     }
     if(isEntryPaid.value == false){
-        store.dispatch("appGlobal/playGame", 10);
+        store.dispatch("appGlobal/playGame", gameRates['entry_fee']);
         balanceChangeType.value = "danger";
-        balanceChangeDisplay.value = translations.value["balance_change_display"][0][language.value];
+        balanceChangeDisplay.value = '-' + gameRates['entry_fee'].toString() + ' ' + translations.value["balance_change_display"][0][language.value];
     }
     isLoading.value = true;
     correctTypeIndex.value = Math.floor(Math.random() * 4);
@@ -108,7 +110,7 @@ const generateRandomAnswer = () =>{
         gameResult: "Entry Fee",
         randomPoker: "",
         selectedPoker: "",
-        gamePrize: -10,
+        gamePrize: -gameRates['entry_fee'],
         balance: computed(() => store.state.appGlobal.userInfo).value.balance,
     };
     store.dispatch("appGlobal/recordGame", gameRecord);
@@ -121,9 +123,10 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
     }
     selectedType.value = types[typeIndex];
     selectedValue.value = values[valueIndex];
+    updateCoolDown.value -= 1;
 
     if(typeIndex == correctTypeIndex.value && valueIndex == correctValueIndex.value){
-        winPrize(208, 1);
+        winPrize(gameRates['same_poker_reward'], 1);
         ElMessage({
             message: translations.value["poker_picker_message_1"][language.value],
             type: 'success',
@@ -131,7 +134,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "success";
     }
     else if(typeIndex == correctTypeIndex.value) {
-        winPrize(13, 3);
+        winPrize(gameRates['same_color_reward'], 3);
         ElMessage({
             message: translations.value["poker_picker_message_2"][language.value],
             type: 'warning',
@@ -139,7 +142,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "warning";
     }
     else if(valueIndex == correctValueIndex.value){
-        winPrize(52, 2);
+        winPrize(gameRates['same_value_reward'], 2);
         ElMessage({
             message: translations.value["poker_picker_message_3"][language.value],
             type: 'warning',
@@ -147,14 +150,17 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "warning";
     }
     else{
-        winPrize(0, 4);
+        winPrize(gameRates['different_reward'], 4);
         ElMessage({
             message: translations.value["poker_picker_message_4"][language.value],
             type: 'error',
         });
         alertType.value = "error";
     }
-    updateUserInfo();
+    if(updateCoolDown.value == 0){
+        updateUserInfo();
+        updateCoolDown.value = 5;
+    }
     isSelected.value = true;
     alertTitleAns.value = translations.value["poker_picker_display_correct_poker"][language.value] + typesDisplay[language.value][correctTypeIndex.value] + " " + valuesDisplay[correctValueIndex.value];
     alertTitle.value = translations.value["poker_picker_display_your_choice"][language.value] + typesDisplay[language.value][typeIndex] + " " + valuesDisplay[valueIndex];
@@ -230,6 +236,10 @@ const updateUserInfo = () => {
     };
     try{
         store.dispatch("appGlobal/updateUserInfo", info);
+        ElMessage({
+            message: translations.value["game_records_auto_save"][language.value],
+            type: 'success',
+        });
     }
     catch (error){
         console.log(error);

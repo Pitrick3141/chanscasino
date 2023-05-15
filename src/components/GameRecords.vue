@@ -38,6 +38,16 @@
     </div>
     <el-divider content-position="left">{{ translations["info_game_records"][language] }}</el-divider>
     <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
+    <el-descriptions>
+        <el-descriptions-item :label="translations['statistics_game_played'][language]">{{ gamePlayed }}</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_same_poker'][language]">{{ samePokerCnt }} ({{Math.round(samePokerCnt/gamePlayed*100)}}%)</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_same_value'][language]">{{ sameValueCnt }} ({{Math.round(sameValueCnt/gamePlayed*100)}}%)</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_same_color'][language]">{{ sameColorCnt }} ({{Math.round(sameColorCnt/gamePlayed*100)}}%)</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_different'][language]">{{ differentCnt }} ({{Math.round(differentCnt/gamePlayed*100)}}%)</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_cost'][language]">{{ totalCost }} {{translations['chanidian_dollar'][language]}}</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_gains'][language]">{{ totalGains }} {{translations['chanidian_dollar'][language]}}</el-descriptions-item>
+        <el-descriptions-item :label="translations['statistics_profit'][language]">{{ totalCost - totalGains }} {{translations['chanidian_dollar'][language]}}</el-descriptions-item>
+    </el-descriptions>
     <el-alert v-if="language==1" title="游戏记录表格内的数据暂不支持翻译为中文，十分抱歉" type="warning" />
     <el-table
         :data="tableData"
@@ -55,8 +65,8 @@
 
 <script setup lang="ts">
 import {useStore} from "vuex";
-import {computed, toRaw, watch} from "@vue/runtime-core";
-import {ref} from "vue";
+import {computed, toRaw} from "@vue/runtime-core";
+import {onMounted, ref} from "vue";
 import {WarnTriangleFilled} from "@element-plus/icons-vue";
 import {API, graphqlOperation} from "aws-amplify";
 // @ts-ignore
@@ -64,18 +74,18 @@ import {deleteUserInfo as deleteUserInfoMutation} from "../graphql/mutations.js"
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
+const gameRates = computed(() => useStore().state.appGlobal.gameRates).value;
 const tableData = ref(computed(() =>useStore().state.appGlobal.gameRecords).value);
 const user = computed(() =>useStore().state.auth.user).value;
 const store = useStore();
 const showDangerOption = ref(false);
-
-
-watch(
-    () => computed(() => store.state.appGlobal.gameRecords).value,
-    () => {
-        tableData.value = computed(() => store.state.appGlobal.gameRecords).value;
-    }
-);
+const gamePlayed = ref(0);
+const samePokerCnt = ref(0);
+const sameColorCnt = ref(0);
+const sameValueCnt = ref(0);
+const differentCnt = ref(0);
+const totalCost = ref(0);
+const totalGains = ref(0);
 
 interface GameRecord {
     time: string,
@@ -126,6 +136,24 @@ const clearUserData = async() => {
     });
     location.reload();
 };
+
+const updateTableData = () =>{
+    const userInfo = computed(() => store.state.appGlobal.userInfo).value;
+    gamePlayed.value = userInfo.gamePlayed;
+    samePokerCnt.value = userInfo.samePokerCnt;
+    sameValueCnt.value = userInfo.sameValueCnt;
+    sameColorCnt.value = userInfo.sameColorCnt;
+    differentCnt.value = userInfo.differentCnt;
+    totalCost.value = gamePlayed.value * gameRates['entry_fee'];
+    totalGains.value = samePokerCnt.value * gameRates['same_poker_reward']
+        + sameValueCnt.value * gameRates['same_value_reward']
+        + sameColorCnt.value * gameRates['same_color_reward']
+        + differentCnt.value * gameRates['different_reward'];
+
+    tableData.value = computed(() => store.state.appGlobal.gameRecords).value;
+};
+
+onMounted(updateTableData);
 
 </script>
 
