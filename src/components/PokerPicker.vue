@@ -157,6 +157,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         });
         alertType.value = "error";
     }
+    user.value = computed(() => store.state.auth.user).value;
     if(updateCoolDown.value == 0){
         updateUserInfo();
         updateCoolDown.value = 5;
@@ -214,7 +215,6 @@ const padTo2Digits = (num: Number) => {
 };
 
 const updateUserInfo = () => {
-    user.value = computed(() => store.state.auth.user).value;
     const userInfo = computed(() => store.state.appGlobal.userInfo).value;
     if(user.value == null){
         console.log("[ERROR] Not Logged in, skipping update");

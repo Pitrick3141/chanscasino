@@ -29,16 +29,6 @@ export const auth = {
                 return Promise.reject(error);
             }
         },
-        async confirmSIgnUp(_, {username, code}){
-            try{
-                await Auth.confirmSignUp(username, code);
-                return Promise.resolve("Success");
-            }
-            catch (error){
-                console.log(error);
-                return Promise.reject(error);
-            }
-        },
         async signUp(_, {username, password, email}){
             try{
                 await Auth.signUp({

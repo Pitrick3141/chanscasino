@@ -71,7 +71,7 @@ const getRankings = async() =>{
     if(rankingData.Body != null) {
         const fetchedData = await rankingData.Body.text()
         const jsonData = JSON.parse(fetchedData)
-        console.log("[INFO] Parsed JSON Data: ", jsonData);
+        console.log("[INFO] Parsed Ranking JSON Data: ", jsonData);
         tableData.value = jsonData.Items.reverse()
     }
 }
@@ -92,10 +92,9 @@ const getStatistics = async() => {
     if(statisticsData.Body != null) {
         const fetchedData = await statisticsData.Body.text()
         const jsonData = JSON.parse(fetchedData)
-        console.log("[INFO] Parsed JSON Data: ", jsonData);
+        console.log("[INFO] Parsed Statistics JSON Data: ", jsonData);
         for(const index in jsonData.Items){
             const item = jsonData.Items[index];
-            console.log(item);
             gamePlayed.value += item.gamePlayed;
             samePokerCnt.value += item.samePokerCnt;
             sameColorCnt.value += item.sameColorCnt;
