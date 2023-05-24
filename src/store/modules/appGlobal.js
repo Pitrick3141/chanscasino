@@ -116,7 +116,7 @@ export default {
                 "signup_success_message": ["Signup successfully. Welcome!", "注册成功，欢迎!"],
                 "login_success_message": ["Welcome back", "欢迎回来"],
                 "logout_success_message": ["Goodbye", "再见"],
-                "play_as_tourist": ["Currently playing as tourist", "当前正在以游客身份游玩"],
+                "play_as_tourist": ["You have not logged in", "您当前处于未登录状态"],
                 "win_prize_message": ["You have won", "你赢得了"],
                 "chanidian_dollar": ["Chanidian Dollar", "陈元"],
                 "not_enough_balance": ["Your balance is not enough to start another game", "您的余额不足，无法开启新的游戏"],
@@ -166,7 +166,7 @@ export default {
                 "info_clear_clear": ["Clear", "清除"],
                 "info_clear_success": ["All user data cleared", "所有用户信息已清除"],
                 "info_not_login": ["User Info is unavailable without login", "未登录时用户信息不可用"],
-                "info_not_login_record": ["Game Records will be lost upon page refresh without login", "未登录时游戏记录将在页面刷新时丢失"],
+                "info_not_login_record": ["Please Log in / Sign up before you start the game", "开始游戏前请您先登录/注册"],
                 "about_title": ["About", "关于"],
                 "about_content": [
                     "This is an online mini game based on Vue3+Vite as frontend, AWS Amplify as hosting, AWS Cognito as authentication, AWS AppSync and DynamoDB as data interface. Developed by Yichen Wang as my Grade 12 Data Management ISP in 2023.",

@@ -1,6 +1,6 @@
 <!--suppress TypeScriptValidateTypes -->
 <template>
-    <el-alert v-if="user==null&&isSelected" :title="translations['info_not_login_record'][language]" type="error" />
+    <el-alert v-if="user==null" :title="translations['info_not_login_record'][language]" type="error" />
     <div class="container flex-col">
         <el-text class="">
             <el-icon><money /></el-icon>
@@ -15,7 +15,7 @@
             {{translations["highest_balance"][language] + highestBalanceDisplay}}
         </el-text>
         <div class="poker-picker">
-            <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="isEntryPaid" :loading="isLoading" @click="generateRandomAnswer">{{ translations["poker_picker_restart_button"][language]}}</el-button>
+            <el-button type="primary" icon="Refresh" style="margin: 25px" :disabled="isEntryPaid||user==null" :loading="isLoading" @click="generateRandomAnswer">{{ translations["poker_picker_restart_button"][language]}}</el-button>
             <el-alert v-if="isSelected" :title="alertTitleAns" type="info" style="margin: 10px" />
             <el-alert v-if="isSelected" :title="alertTitle" :type="alertType" style="margin: 10px" />
             <div v-loading="isSelected||!isEntryPaid" :element-loading-text="translations['poker_picker_loading_info'][language]">
@@ -39,6 +39,7 @@ import {computed, ref, watch} from "@vue/runtime-core";
 import {useStore} from "vuex";
 import {Money, Trophy} from "@element-plus/icons-vue";
 import {ElMessageBox} from "element-plus";
+import {onMounted} from "vue";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
@@ -83,6 +84,11 @@ watch(
 
 
 const generateRandomAnswer = () =>{
+    getCurrentUser();
+    if(user.value==null){
+        console.log("[ERROR] You have not logged in!");
+        return;
+    }
     if(currentBalanceDisplay.value < gameRates['entry_fee']){
         ElMessage({
             message: translations.value["not_enough_balance"][language.value],
@@ -117,7 +123,16 @@ const generateRandomAnswer = () =>{
     store.dispatch("appGlobal/recordGame", gameRecord);
 };
 
+const getCurrentUser = () => {
+    user.value = computed(() => store.state.auth.user).value;
+}
+
 const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
+    getCurrentUser();
+    if(user.value==null){
+        console.log("[ERROR] You have not logged in!");
+        return;
+    }
     if(isSelected.value == true){
         console.log("[ERROR] You have already selected!");
         return;
@@ -157,7 +172,6 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         });
         alertType.value = "error";
     }
-    user.value = computed(() => store.state.auth.user).value;
     updateUserInfo();
     isSelected.value = true;
     alertTitleAns.value = translations.value["poker_picker_display_correct_poker"][language.value] + typesDisplay[language.value][correctTypeIndex.value] + " " + valuesDisplay[correctValueIndex.value];
@@ -243,6 +257,7 @@ const updateUserInfo = () => {
     }
 };
 
+onMounted(getCurrentUser);
 defineExpose({isSelected, generateRandomAnswer});
 
 </script>
