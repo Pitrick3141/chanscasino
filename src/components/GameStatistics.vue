@@ -79,7 +79,7 @@ const getRankings = async() =>{
                 jsonData.Items.splice(index);
             }
         }
-        tableData.value = jsonData.Items.reverse();
+        tableData.value = jsonData.Items.sort((a: any, b: any) => (a.highestBalance < b.highestBalance) ? 1 : -1);
     }
 }
 
