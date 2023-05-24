@@ -37,7 +37,7 @@ import {useStore} from "vuex";
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
 const gameRates = computed(() => useStore().state.appGlobal.gameRates).value;
-const tableData = ref(null);
+const tableData = ref([{}]);
 const hours = ref(0);
 const minutes = ref(0);
 const seconds = ref(0);
@@ -69,17 +69,17 @@ const getRankings = async() =>{
         seconds.value = Math.floor((timeDifference / 1000) % 60);
     }
     if(rankingData.Body != null) {
-        const fetchedData = await rankingData.Body.text()
-        const jsonData = JSON.parse(fetchedData)
+        const fetchedData = await rankingData.Body.text();
+        let jsonData = JSON.parse(fetchedData);
+        let trimmedData = [];
         console.log("[INFO] Parsed Ranking JSON Data: ", jsonData);
         for(const index in jsonData.Items)
         {
-            if(jsonData.Items[index].id.includes('removed')){
-                console.log("[INFO] Remove Ranking of: ", jsonData.Items[index].id);
-                jsonData.Items.splice(index);
+            if(!jsonData.Items[index].id.includes('removed')){
+                trimmedData.unshift(jsonData.Items[index]);
             }
         }
-        tableData.value = jsonData.Items.sort((a: any, b: any) => (a.highestBalance < b.highestBalance) ? 1 : -1);
+        tableData.value = trimmedData.sort((a: any, b: any) => (a.highestBalance < b.highestBalance) ? 1 : -1);
     }
 }
 
