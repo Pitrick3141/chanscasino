@@ -38,7 +38,7 @@ export default {
                 message: this.translations["logout_success_message"][this.language] + ", " + username + "!",
                 type: 'success',
             });
-            this.$router.push("/");
+            location.reload();
         },
     },
     computed:{
