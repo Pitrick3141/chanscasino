@@ -26,7 +26,7 @@ export default defineComponent({
 <style lang='scss' scoped>
 .scroll {
     height: 20px;
-    width: 400px;
+    width: 500px;
     margin: 25px auto;
     overflow: hidden;
 }

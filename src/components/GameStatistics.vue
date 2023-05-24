@@ -72,7 +72,14 @@ const getRankings = async() =>{
         const fetchedData = await rankingData.Body.text()
         const jsonData = JSON.parse(fetchedData)
         console.log("[INFO] Parsed Ranking JSON Data: ", jsonData);
-        tableData.value = jsonData.Items.reverse()
+        for(const index in jsonData.Items)
+        {
+            if(jsonData.Items[index].id.includes('removed')){
+                console.log("[INFO] Remove Ranking of: ", jsonData.Items[index].id);
+                jsonData.Items.splice(index);
+            }
+        }
+        tableData.value = jsonData.Items.reverse();
     }
 }
 

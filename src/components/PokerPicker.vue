@@ -38,6 +38,7 @@ import PokerImage from "./PokerImage.vue";
 import {computed, ref, watch} from "@vue/runtime-core";
 import {useStore} from "vuex";
 import {Money, Trophy} from "@element-plus/icons-vue";
+import {ElMessageBox} from "element-plus";
 
 const translations = computed(() => useStore().state.appGlobal.translations);
 const language = computed(() => useStore().state.appGlobal.language);
@@ -66,7 +67,6 @@ const isLoading = ref(false);
 const alertTitle = ref("");
 const alertTitleAns = ref("");
 const alertType = ref("success");
-const updateCoolDown = ref(5);
 const store = useStore();
 
 watch(
@@ -88,6 +88,10 @@ const generateRandomAnswer = () =>{
             message: translations.value["not_enough_balance"][language.value],
             type: 'error',
         });
+        ElMessageBox.alert(
+            translations.value['not_gamble'][language.value],
+            translations.value['not_gamble_title'][language.value]
+        );
         return;
     }
     if(isEntryPaid.value == false){
@@ -100,9 +104,6 @@ const generateRandomAnswer = () =>{
     correctType.value = types[correctTypeIndex.value];
     correctValueIndex.value = Math.floor(Math.random() * 13);
     correctValue.value = values[correctValueIndex.value];
-    console.log("[INFO] Generated Random Poker: ",
-        typesDisplay[language.value][correctTypeIndex.value],
-        valuesDisplay[correctValueIndex.value]);
     isLoading.value = false;
     isSelected.value = false;
     const gameRecord = {
@@ -118,12 +119,11 @@ const generateRandomAnswer = () =>{
 
 const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
     if(isSelected.value == true){
-        console.log("You have already selected!");
+        console.log("[ERROR] You have already selected!");
         return;
     }
     selectedType.value = types[typeIndex];
     selectedValue.value = values[valueIndex];
-    updateCoolDown.value -= 1;
 
     if(typeIndex == correctTypeIndex.value && valueIndex == correctValueIndex.value){
         winPrize(gameRates['same_poker_reward'], 1);
@@ -158,10 +158,7 @@ const onSelectPoker = (event: any, typeIndex: number, valueIndex: number) => {
         alertType.value = "error";
     }
     user.value = computed(() => store.state.auth.user).value;
-    if(updateCoolDown.value == 0){
-        updateUserInfo();
-        updateCoolDown.value = 5;
-    }
+    updateUserInfo();
     isSelected.value = true;
     alertTitleAns.value = translations.value["poker_picker_display_correct_poker"][language.value] + typesDisplay[language.value][correctTypeIndex.value] + " " + valuesDisplay[correctValueIndex.value];
     alertTitle.value = translations.value["poker_picker_display_your_choice"][language.value] + typesDisplay[language.value][typeIndex] + " " + valuesDisplay[valueIndex];
@@ -190,7 +187,7 @@ const winPrize = (prize: number, explain: number) => {
     };
     store.dispatch("appGlobal/recordGame", gameRecord);
     if(prize == 0){
-        balanceChangeDisplay.value = "";
+        balanceChangeType.value = "warning";
     }
 };
 
@@ -236,13 +233,13 @@ const updateUserInfo = () => {
     };
     try{
         store.dispatch("appGlobal/updateUserInfo", info);
-        ElMessage({
-            message: translations.value["game_records_auto_save"][language.value],
-            type: 'success',
-        });
     }
     catch (error){
         console.log(error);
+        ElMessage({
+            message: translations.value["game_records_auto_save_failed"][language.value],
+            type: 'error',
+        });
     }
 };
 

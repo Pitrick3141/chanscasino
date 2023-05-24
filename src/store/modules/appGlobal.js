@@ -41,20 +41,20 @@ export default {
                 "tutorials_extra_game_title": ["Pay-ins and Pay-outs", "得分规则"],
                 "tutorials_extra_game_link": ["Try It Now 》", "开一把试试 》"],
                 "tutorials_extra_game_content_1": [
-                    "Entry Fee: 10 Chanidian Dollars",
-                    "入场费：10陈元"
+                    "Entry Fee: 1 Chanidian Dollar",
+                    "入场费：1陈元"
                 ],
                 "tutorials_extra_game_content_2": [
-                    "If your choice is identical to the randomly generated poker: You WIN 100 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克完全相同：你获得100陈元的奖励"
+                    "If your choice is identical to the randomly generated poker: You WIN 10 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克完全相同：你获得10陈元的奖励"
                 ],
                 "tutorials_extra_game_content_3": [
-                    "If your choice has the same value as the randomly generated poker: You WIN 50 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克点数相同：你获得50陈元的奖励"
+                    "If your choice has the same value as the randomly generated poker: You WIN 5 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克点数相同：你获得5陈元的奖励"
                 ],
                 "tutorials_extra_game_content_4": [
-                    "If your choice has the same type as the randomly generated poker: You WIN 20 Chanidian Dollars",
-                    "如果你的选择与随机生成的扑克花色相同：你获得20陈元的奖励"
+                    "If your choice has the same type as the randomly generated poker: You WIN 2 Chanidian Dollars",
+                    "如果你的选择与随机生成的扑克花色相同：你获得2陈元的奖励"
                 ],
                 "tutorials_extra_game_content_5": [
                     "If your choice is totally different from the randomly generated poker: You WIN Nothing",
@@ -68,18 +68,37 @@ export default {
                 ],
                 "change_language_message": ["Language set to English", "已将语言设置为简体中文"],
                 "announcements": [
-                    ["First Online Casino in Canada is now online!",
+                    ["First Online Casino in Chanada is now open!",
                         "Handsome dealer Mr. Chan is dealing online",
                         "Feel the charm of Data Management!",
                         "You can withdraw $0.00000000 everyday!",
                         "Whose ISP project is this?",
-                        "There are also rankings for you to explore!"],
-                    ["加拿带首家线上赌场上线啦！",
+                        "There are also rankings for you to conquer!",
+                        "Your Data helps my ISP Report!",
+                        "Do you know that this is NOT a fair game?",
+                        "Stay away from gambling in reality!",
+                        "A truly lucky person doesn't gamble.",
+                        "In the gambling world, winning doesn't last long.",
+                        "Gambling is problematic when it turns into an addiction.",
+                        "One should quit gambling for good.",
+                        "Gambling is a loser's game.",
+                        "Don't waste your money at the gambling table.",
+                        "Gamblers keep making the same mistakes over and over."],
+                    ["陈拿大首家线上赌场开业啦！",
                         "帅哥荷官老陈在线发牌！",
                         "感受数据管理的魅力！",
                         "每日可以提现$0.00000000！",
                         "这究竟是谁的ISP?",
-                        "更有牛马小榜单等你占领！",]
+                        "更有赌王榜单等你占领！",
+                        "你的数据帮助我的ISP报告！",
+                        "你知道这不是一个公平的游戏吗？",
+                        "现实生活中可要远离赌博！",
+                        "只要不赌，还不是想吃什么吃什么。",
+                        "赌网恢恢，输而不漏。",
+                        "辛辛苦苦二十年，一赌回到解放前。",
+                        "十个赌徒九个输，倾家荡产不如猪。",
+                        "不赌你就赢了，你赌，你就输定了。",
+                        "而要想不输，只有一个办法，就是远离赌博。"]
                 ],
                 "under_construction": ["Too bad that this part is still under construction!", "前面的区域，以后再来探索吧？"],
                 "nav_bar_welcome": ["Welcome", "欢迎"],
@@ -101,6 +120,9 @@ export default {
                 "win_prize_message": ["You have won", "你赢得了"],
                 "chanidian_dollar": ["Chanidian Dollar", "陈元"],
                 "not_enough_balance": ["Your balance is not enough to start another game", "您的余额不足，无法开启新的游戏"],
+                "not_gamble": ["Like any other gambling in reality, it is NOT a fair game. The expected pay-out is $0.94 while your pay-in is always $1. Gambling in reality may have MUCH LOWER expected pay-outs. So do not gamble in reality!",
+                "正如现实中的赌博游戏一般，这不是完全公平的。你的预期回报是$0.94而你的投入永远是$1。现实中的赌博可能有 低 得 多 的回报率。所以请不要在现实中赌博！"],
+                "not_gamble_title": ["You have used up your Chanidian Dollars!", "你已经用光了你的陈元！"],
                 "error_messages": {
                     "User does not exist.": ["The username you entered does not exist", "你输入的用户名不存在"],
                     "Incorrect username or password.": ["The username and password you entered do not match", "您输入的用户名和密码不匹配"],
@@ -171,15 +193,15 @@ export default {
                 "statistics_cost": ["Players' Total Cost", "玩家的总计游戏成本"],
                 "statistics_gains": ["Players' Total Gains", "玩家的总计游戏回报"],
                 "statistics_profit": ["Chan's Profit", "老陈的利润"],
-                "game_records_auto_save": ["Your Game Records have been auto-saved", "您的游戏记录已自动保存"],
+                "game_records_auto_save_failed": ["Game Records Auto-save Failed", "游戏记录自动保存失败"],
                 "create_user_start": ["Creating User... Please Wait", "正在为您创建用户，请稍后..."],
                 "create_user_done": ["User Created Successfully. Redirecting to the home page...", "成功创建用户，正在跳转到首页..."],
 
             },
             language: 0,
             userInfo: {
-                balance: 100,
-                highestBalance: 100,
+                balance: 10,
+                highestBalance: 10,
                 gamePlayed: 0,
                 samePokerCnt: 0,
                 sameValueCnt: 0,
@@ -190,10 +212,10 @@ export default {
             },
             gameRecords: [],
             gameRates: {
-                "entry_fee": 10,
-                "same_poker_reward": 100,
-                "same_value_reward": 50,
-                "same_color_reward": 20,
+                "entry_fee": 1,
+                "same_poker_reward": 10,
+                "same_value_reward": 5,
+                "same_color_reward": 2,
                 "different_reward": 0,
             },
         }
